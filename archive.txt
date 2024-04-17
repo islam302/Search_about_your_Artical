@@ -1,0 +1,2595 @@
+# #
+# #     #
+# #     #
+# #     #
+# #     #
+# #     # # def search_for_word_in_google(self, word, arab_countries_google_urls):
+# #     # #     for url in arab_countries_google_urls:
+# #     # #         search_url = f'{url}search?q={word}'
+# #     # #         try:
+# #     # #             response = requests.get(search_url)
+# #     # #             if response.status_code == 200:
+# #     # #                 encoding = chardet.detect(response.content)['encoding']
+# #     # #                 soup = BeautifulSoup(response.content.decode(encoding), 'html.parser')
+# #     # #                 results = soup.find_all('a', href=True)
+# #     # #                 for result in results:
+# #     # #                     if 'url?q=' in result['href']:
+# #     # #                         link = result['href'].split('url?q=')[1].split('&sa=')[0]
+# #     # #                         if word in result.get_text():
+# #     # #                             print(f'The word "{word}" was found in the following link:')
+# #     # #                             print(link)
+# #     # #                             break
+# #     # #             else:
+# #     # #                 print(f'Failed to fetch search results from {url}')
+# #     # #         except:
+# #     # #             print(f"Failed to fetch search results from {search_url}. Skipping...")
+# #     # #             continue
+# #     #
+# #     # def main(self):
+# #     #
+# #     #     def get_countries_from_file(countries_file_path):
+# #     #         with open(countries_file_path, 'r') as file:
+# #     #             countries = file.readlines()
+# #     #         return [country.strip() for country in countries]
+# #     #
+# #     #     def get_words_from_file(words_file_path):
+# #     #         with open(words_file_path, 'r') as file:
+# #     #             words = file.readlines()
+# #     #         return [word.strip() for word in words]
+# #     #
+# #     #     def create_google_search_links(countries):
+# #     #         google_links = []
+# #     #         for country in countries:
+# #     #             try:
+# #     #                 country_obj = pycountry.countries.lookup(country)
+# #     #                 zip_code = country_obj.alpha_2
+# #     #                 google_links.append(f"https://www.google.com.{zip_code}/")
+# #     #             except LookupError:
+# #     #                 print(f"Country '{country}' not found. Skipping...")
+# #     #                 continue
+# #     #         return google_links
+# #     #
+# #     #     countries_file_path = 'countries.txt'
+# #     #     words_file_path = 'news.txt'
+# #     #     countries = get_countries_from_file(countries_file_path)
+# #     #     words_to_check = get_words_from_file(words_file_path)
+# #     #     # arab_countries_google_urls = create_google_search_links(countries)
+# #     #
+# #     #     self.list_of_links = self.get_links_from_file('links.txt')
+# #     #     responses = self.get_response(self.list_of_links)
+# #     #
+# #     #
+# #     #     # self.search_for_word_in_google('د.العيسى يُعلن الإطلاق “التجريبي” للمتحف الدولي للسيرة النبويّة بأبراج الساعة', arab_countries_google_urls)
+#
+#
+# import requests
+# from bs4 import BeautifulSoup
+#
+# class Search_About_News:
+#
+#     def get_links_from_file(self, file_path):
+#         with open(file_path, 'r', encoding='utf-8') as file:
+#             links = file.readlines()
+#         return [link.strip() for link in links]
+#
+#     def get_response(self, links):
+#         found_links = []
+#         for link in links:
+#             response = requests.get(link)
+#             if response.status_code == 200:
+#                 soup = BeautifulSoup(response.text, 'html.parser')
+#                 # تقسيم النص إلى أسطر
+#                 lines = soup.get_text().splitlines()
+#                 target_text = 'د.العيسى يُعلن الإطلاق “التجريبي” للمتحف الدولي للسيرة النبويّة بأبراج الساعة'
+#                 for line in lines:
+#                     if target_text in line:
+#                         parent_a = soup.find('a', string=line)
+#                         if parent_a and 'href' in parent_a.attrs:
+#                             found_links.append(parent_a['href'])
+#                             break
+#             else:
+#                 print(f"Failed to fetch {link}")
+#         return found_links
+#
+#     def main(self):
+#         links = self.get_links_from_file('links.txt')
+#         found_links = self.get_response(links)
+#
+# if __name__ == '__main__':
+#     bot = Search_About_News()
+#     bot.main()
+#
+
+
+
+
+# import re
+# from bs4 import BeautifulSoup
+# import requests
+#
+# class Search_About_News:
+#
+#     def get_links_from_file(self, file_path):
+#         with open(file_path, 'r', encoding='utf-8') as file:
+#             links = file.readlines()
+#         return [link.strip() for link in links]
+#
+    # def get_response(self, words, links):
+    #     found_links = []
+    #     for link in links:
+    #         response = requests.get(link)
+    #         if response.status_code == 200:
+    #             soup = BeautifulSoup(response.text, 'html.parser')
+    #             # تحديد النص بواسطة تعبير منتظم
+    #             target_pattern = re.compile(r'د\.العيسى يُعلن الإطلاق "التجريبي" للمتحف الدولي للسيرة النبويّة بأبراج الساعة')
+    #             for line in soup.stripped_strings:
+    #                 if target_pattern.search(line):
+    #                     parent_a = soup.find('a', string=line)
+    #                     if parent_a and 'href' in parent_a.attrs:
+    #                         found_links.append(parent_a['href'])
+    #                         break
+    #
+    #         else:
+    #             print(f"Failed to fetch {link}")
+    #     return found_links
+#
+#     def main(self):
+#         links = self.get_links_from_file('links.txt')
+#         found_links = self.get_response(words=[], links=links)
+#         print(f'The links were found in the following links:')
+#         print(found_links)
+#
+# if __name__ == '__main__':
+#     bot = Search_About_News()
+#     bot.main()
+
+    # def get_response(self, words, links, folder_path):
+    #     found_links = {}
+    #     for word in words:
+    #         found_links[word] = []
+    #         for link in links:
+    #             match_link = False
+    #             URL = f'{link}{word}'
+    #             response = requests.get(URL)
+    #             if response.status_code == 200:
+    #                 soup = BeautifulSoup(response.content, 'html.parser')
+    #                 all_links = soup.find_all('a', href=True)
+    #                 search_url_parsed = urlparse(link)
+    #                 domain = f'{search_url_parsed.scheme}://{search_url_parsed.netloc}'
+    #                 for a_tag in all_links:
+    #                     href = a_tag.get('href')
+    #                     if href:
+    #                         full_link = urljoin(domain, href)
+    #                         if word.lower() in a_tag.get_text().lower():
+    #                             found_links[word].append({'link': full_link})
+    #                             match_link = True
+    #                             break
+    #
+    #                 if not match_link:
+    #                     if all_links:
+    #                         first_link = urljoin(domain, all_links[0]['href'])
+    #                         found_links[word].append({'link': first_link})
+    #                     else:
+    #                         found_links[word].append({'link': URL})
+    #             else:
+    #                 with open('Wrong_links.txt', 'w') as file:
+    #                     file.write(link + '\n')
+    #
+    #         screen_path = os.path.join(folder_path, 'screenshots')
+    #         os.makedirs(screen_path, exist_ok=True)
+    #         self.start_driver()
+    #         link_data_list = []
+    #         for link_data in found_links[word]:
+    #                 self.driver.get(link_data['link'])
+    #                 time.sleep(1)
+    #                 screenshot_name = link_data['link'].replace('/', '_').replace(':', '_') + ".png"
+    #                 screenshot_path = os.path.join(screen_path, screenshot_name)
+    #                 self.driver.save_screenshot(screenshot_path)
+    #
+    #                 article = Article(link_data['link'])
+    #                 article.download()
+    #                 article.parse()
+    #                 publish_date = article.publish_date
+    #
+    #                 if publish_date:
+    #                     formatted_date = publish_date.strftime("%d/%m/%Y")
+    #                     link_data_list.append(
+    #                         {'link': link_data['link'], 'date': formatted_date})
+    #                 else:
+    #                     text_content = article.text
+    #                     date_patterns = [
+    #                         r'\d{1,2}\s+\w+\s+\d{4}',
+    #                         r'\d{1,2}/\d{1,2}/\d{4}',
+    #                         r'\d{4}-\d{2}-\d{2}',
+    #                         r'\d{1,2}\s+\w+\s+\d{1,2}',
+    #                         r'\d{1,2}\s+\w+\s+\d{4}',
+    #                     ]
+    #
+    #                     for pattern in date_patterns:
+    #                         match = re.search(pattern, text_content)
+    #                         if match:
+    #                             date_str = match.group()
+    #                             date_str = re.sub(r'(\d{1,2}\s+)(\w+\s+)(\d{4})',
+    #                                               lambda
+    #                                                   m: f"{m.group(1)}{self.convert_arabic_month_to_english(m.group(2))} {m.group(3)}",
+    #                                               date_str)
+    #                             formatted_date = date_parser.parse(date_str, fuzzy=True).strftime("%d/%m/%Y")
+    #                             link_data_list.append(
+    #                                 {'link': link_data['link'], 'date': formatted_date})
+    #                             break
+    #                     else:
+    #                         link_data_list.append({'link': link_data['link'], 'date': 'not found'})
+    #         found_links[word] = link_data_list
+    #     return found_links
+
+    # def get_response(self, words, links, folder_path):
+    #     found_links = {}
+    #     for word in words:
+    #         found_links[word] = []
+    #         for link in links:
+    #             match_link = False
+    #             URL = f'{link}{word}'
+    #             response = requests.get(URL)
+    #             if response.status_code == 200:
+    #                 soup = BeautifulSoup(response.content, 'html.parser')
+    #                 all_links = soup.find_all('a', href=True)
+    #                 search_url_parsed = urlparse(link)
+    #                 domain = f'{search_url_parsed.scheme}://{search_url_parsed.netloc}'
+    #                 for a_tag in all_links:
+    #                     href = a_tag.get('href')
+    #                     if href:
+    #                         full_link = urljoin(domain, href)
+    #                         if word.lower() in a_tag.get_text().lower():
+    #                             publish_date = self.get_publish_date(full_link, word)
+    #                             found_links[word].append({'link': full_link, 'date': publish_date})
+    #                             match_link = True
+    #                             break
+    #
+    #                 if not match_link:
+    #                     if all_links:
+    #                         first_link = urljoin(domain, all_links[0]['href'])
+    #                         publish_date = self.get_publish_date(first_link, word)
+    #                         found_links[word].append({'link': first_link, 'date': publish_date})
+    #                     else:
+    #                         found_links[word].append({'link': URL, 'date': 'not found'})
+    #             else:
+    #                 with open('Wrong_links.txt', 'w') as file:
+    #                     file.write(link + '\n')
+    #
+    #         screen_path = os.path.join(folder_path, 'screenshots')
+    #         os.makedirs(screen_path, exist_ok=True)
+    #         self.start_driver()
+    #         for link_data in found_links[word]:
+    #             try:
+    #                 self.driver.get(link_data['link'])
+    #                 time.sleep(1)
+    #                 screenshot_name = link_data['link'].replace('/', '_').replace(':', '_') + ".png"
+    #                 screenshot_path = os.path.join(screen_path, screenshot_name)
+    #                 self.driver.save_screenshot(screenshot_path)
+    #             except Exception as e:
+    #                 print(f"Error taking screenshot of {link_data['link']}: {e}")
+    #
+    #     return found_links
+
+complete script
+
+
+# # # # # # import re
+# # # # # # from bs4 import BeautifulSoup
+# # # # # # import requests
+# # # # # # import pandas as pd
+# # # # # # import difflib
+# # # # # # import pycountry
+# # # # # # import chardet
+# # # # # # from urllib.parse import quote
+# # # # # #
+# # # # # #
+# # # # # # class Search_About_News:
+# # # # # #
+# # # # # #     def get_links_from_file(self, file_path):
+# # # # # #         with open(file_path, 'r', encoding='utf-8') as file:
+# # # # # #             links = file.readlines()
+# # # # # #         return [link.strip() for link in links if link.strip()]
+# # # # # #
+# # # # # #     def get_words_from_file(self, words_file_path):
+# # # # # #         with open(words_file_path, 'r', encoding='utf-8') as file:
+# # # # # #             words = file.readlines()
+# # # # # #         return list(set([word.strip() for word in words if word.strip()]))
+# # # # # #
+# # # # # #     def get_response(self, words, links):
+# # # # # #         found_links = {}
+# # # # # #         for word in words:
+# # # # # #             found_links[word] = []
+# # # # # #             for link in links:
+# # # # # #                 url = f'{link}{word}'
+# # # # # #                 response = requests.get(url)
+# # # # # #                 if response.status_code == 200:
+# # # # # #                     soup = BeautifulSoup(response.text, 'html.parser')
+# # # # # #                     target_pattern = re.compile(word)
+# # # # # #                     for line in soup.stripped_strings:
+# # # # # #                         if target_pattern.search(line):
+# # # # # #                             parent_a = soup.find('a', string=line)
+# # # # # #                             if parent_a and 'href' in parent_a.attrs:
+# # # # # #                                 found_links[word].append(parent_a['href'])
+# # # # # #                                 break
+# # # # # #                 else:
+# # # # # #                     with open('links_need_to_done_manually.txt', 'a', encoding='utf-8') as file:
+# # # # # #                         file.write(f'{link}\n')
+# # # # # #         return found_links
+# # # # # #
+# # # # # #     def get_countries_from_file(self, countries_file_path):
+# # # # # #         with open(countries_file_path, 'r', encoding='utf-8') as file:
+# # # # # #             return [country.strip() for country in file if country.strip()]
+# # # # # #
+# # # # # #     def create_google_search_links(self, countries):
+# # # # # #         google_links = []
+# # # # # #         for country in countries:
+# # # # # #             try:
+# # # # # #                 country_obj = pycountry.countries.lookup(country)
+# # # # # #                 zip_code = country_obj.alpha_2.lower()
+# # # # # #                 google_links.append(f"https://www.google.com.{zip_code}/")
+# # # # # #             except LookupError:
+# # # # # #                 print(f"Country '{country}' not found. Skipping...")
+# # # # # #         return google_links
+# # # # # #
+# # # # # #     def search_and_get_links(self, query, num_results=10):
+# # # # # #         try:
+# # # # # #             search_results = search(query, num_results=num_results, lang='en')
+# # # # # #             return list(search_results)
+# # # # # #         except Exception as e:
+# # # # # #             print(f"An error occurred: {e}")
+# # # # # #             return []
+# # # # # #
+# # # # # #     def search_for_word_in_google(self, words, arab_countries_google_urls):
+# # # # # #         result_links = {}
+# # # # # #         for word in words:
+# # # # # #             result_links[word] = []
+# # # # # #             for url in arab_countries_google_urls:
+# # # # # #                 search_url = f'{url}search?q={word}'
+# # # # # #                 try:
+# # # # # #                     response = requests.get(search_url)
+# # # # # #                     if response.status_code == 200:
+# # # # # #                         soup = BeautifulSoup(response.content, "html.parser")
+# # # # # #                         links = soup.find_all("a")
+# # # # # #                         links_found = 0
+# # # # # #                         for link in links:
+# # # # # #                             href = link.get("href")
+# # # # # #                             if href.startswith("/url?q="):
+# # # # # #                                 result_links[word].append(href.replace("/url?q=", "").split("&sa=")[0])
+# # # # # #                                 links_found += 1
+# # # # # #                                 if links_found >= 10:
+# # # # # #                                     break
+# # # # # #                 except requests.exceptions.RequestException as e:
+# # # # # #                     continue
+# # # # # #
+# # # # # #         return result_links
+# # # # # #
+# # # # # #     def main(self):
+# # # # # #
+# # # # # #         words = self.get_words_from_file('news.txt')
+# # # # # #         x = input('Start Task From Domains enter 1\nFrom Google enter 2\n')
+# # # # # #
+# # # # # #         if x == '1':
+# # # # # #
+# # # # # #             links = self.get_links_from_file('links.txt')
+# # # # # #             found_links = self.get_response(words, links)
+# # # # # #             df = pd.DataFrame.from_dict(found_links, orient='index').transpose()
+# # # # # #             for col in df.columns:
+# # # # # #                 max_len = max([len(str(cell)) for cell in df[col]])
+# # # # # #                 width = max(50, max_len)
+# # # # # #                 df[col] = df[col].astype(str).str.pad(width, side='right')
+# # # # # #             df.to_excel('found_links_From_Domains.xlsx', index=False)
+# # # # # #             print(f'The links were found and saved in "found_links.xlsx".')
+# # # # # #
+# # # # # #         else:
+# # # # # #             countries = self.get_countries_from_file('countries.txt')
+# # # # # #             searching_urls = self.create_google_search_links(countries)
+# # # # # #             found = self.search_for_word_in_google(words, searching_urls)
+# # # # # #             df = pd.DataFrame.from_dict(found, orient='index').transpose()
+# # # # # #             if not df.empty:
+# # # # # #                 max_len = max([len(str(cell)) for col in df.columns for cell in df[col]])
+# # # # # #                 for col in df.columns:
+# # # # # #                     max_len = max([len(str(cell)) for cell in df[col]])
+# # # # # #                     width = max(50, max_len)
+# # # # # #                     df[col] = df[col].astype(str).str.pad(width, side='right')
+# # # # # #                 df.to_excel('found_links_From_Google.xlsx', index=False)
+# # # # # #                 print(f'The links were found and saved in "found_links.xlsx".')
+# # # # # #             else:
+# # # # # #                 print("No results found. No links were saved.")
+# # # # # #
+# # # # # #
+# # # # # # if __name__ == '__main__':
+# # # # # #     bot = Search_About_News()
+# # # # # #     bot.main()
+# # # # # #
+# # # # #
+# # # # #
+# # # #
+# # # # import re
+# # # # from bs4 import BeautifulSoup
+# # # # import requests
+# # # # import pandas as pd
+# # # # import difflib
+# # # # import pycountry
+# # # # import chardet
+# # # #
+# # # #
+# # # # class Search_About_News:
+# # # #
+# # # #     def get_links_from_file(self, file_path):
+# # # #         with open(file_path, 'r', encoding='utf-8') as file:
+# # # #             links = file.readlines()
+# # # #         return [link.strip() for link in links if link.strip()]
+# # # #
+# # # #     def get_words_from_file(self, words_file_path):
+# # # #         with open(words_file_path, 'r', encoding='utf-8') as file:
+# # # #             words = file.readlines()
+# # # #         return list(set([word.strip() for word in words if word.strip()]))
+# # # #
+# # # #     def get_response(self, words, links):
+# # # #         found_links = {}
+# # # #         for word in words:
+# # # #             found_links[word] = []
+# # # #             for link in links:
+# # # #                 response = requests.get(url)
+# # # #                 if response.status_code == 200:
+# # # #                     print(link)
+# # # #                     soup = BeautifulSoup(response.text, 'html.parser')
+# # # #                     target_pattern = re.compile(word)
+# # # #                     for line in soup.stripped_strings:
+# # # #                         if target_pattern.search(line):
+# # # #                             parent_a = soup.find('a', string=line)
+# # # #                             if parent_a and 'href' in parent_a.attrs:
+# # # #                                 found_links[word].append(parent_a['href'])
+# # # #                                 break
+# # # #                     break
+# # # #                 else:
+# # # #                     with open('links_need_to_done_manually.txt', 'a', encoding='utf-8') as file:
+# # # #                         file.write(f'{link}\n')
+# # # #         return found_links
+# # # #
+# # # #     def get_countries_from_file(self, countries_file_path):
+# # # #         with open(countries_file_path, 'r', encoding='utf-8') as file:
+# # # #             return [country.strip() for country in file if country.strip()]
+# # # #
+# # # #     def create_google_search_links(self, countries):
+# # # #         google_links = []
+# # # #         for country in countries:
+# # # #             try:
+# # # #                 country_obj = pycountry.countries.lookup(country)
+# # # #                 zip_code = country_obj.alpha_2.lower()
+# # # #                 google_links.append(f"https://www.google.com.{zip_code}/")
+# # # #             except LookupError:
+# # # #                 print(f"Country '{country}' not found. Skipping...")
+# # # #         return google_links
+# # # #
+# # # #     def search_and_get_links(self, query, num_results=10):
+# # # #         try:
+# # # #             search_results = search(query, num_results=num_results, lang='en')
+# # # #             return list(search_results)
+# # # #         except Exception as e:
+# # # #             print(f"An error occurred: {e}")
+# # # #             return []
+# # # #
+# # # #     def search_for_word_in_google(self, words, arab_countries_google_urls):
+# # # #         result_links = {}
+# # # #         for word in words:
+# # # #             result_links[word] = []
+# # # #             links_found = 0
+# # # #             for url in arab_countries_google_urls:
+# # # #                 search_url = f'{url}search?q={word}'
+# # # #                 try:
+# # # #                     response = requests.get(search_url)
+# # # #                     if response.status_code == 200:
+# # # #                         soup = BeautifulSoup(response.content, "html.parser")
+# # # #                         links = soup.find_all("a")
+# # # #                         for link in links:
+# # # #                             href = link.get("href")
+# # # #                             if href.startswith("/url?q="):
+# # # #                                 result_links[word].append(href.replace("/url?q=", "").split("&sa=")[0])
+# # # #                                 links_found += 1
+# # # #                                 if links_found >= 10:
+# # # #                                     break
+# # # #                 except requests.exceptions.RequestException as e:
+# # # #                     print(f"An error occurred: {e}")
+# # # #                     continue
+# # # #
+# # # #         return result_links
+# # # #
+# # # #
+# # # #
+# # # #     def main(self):
+# # # #         words = self.get_words_from_file('news.txt')
+# # # #         x = input('Start Task From Domains enter 1\nFrom Google enter 2\n')
+# # # #         if x == '1':
+# # # #
+# # # #             links = self.get_links_from_file('links.txt')
+# # # #             found_links = self.get_response(words, links)
+# # # #             df = pd.DataFrame.from_dict(found_links, orient='index').transpose()
+# # # #             for col in df.columns:
+# # # #                 max_len = max([len(str(cell)) for cell in df[col]])
+# # # #                 width = max(50, max_len)
+# # # #                 df[col] = df[col].astype(str).str.pad(width, side='right')
+# # # #             df.to_excel('found_links_From_Domains.xlsx', index=False)
+# # # #             print(f'The links were found and saved in "found_links.xlsx".')
+# # # #
+# # # #         else:
+# # # #             countries = self.get_countries_from_file('countries.txt')
+# # # #             searching_urls = self.create_google_search_links(countries)
+# # # #             found = self.search_for_word_in_google(words, searching_urls)
+# # # #             df = pd.DataFrame.from_dict(found, orient='index').transpose()
+# # # #             if not df.empty:
+# # # #                 max_len = max([len(str(cell)) for col in df.columns for cell in df[col]])
+# # # #                 for col in df.columns:
+# # # #                     max_len = max([len(str(cell)) for cell in df[col]])
+# # # #                     width = max(50, max_len)
+# # # #                     df[col] = df[col].astype(str).str.pad(width, side='right')
+# # # #                 df.to_excel('found_links_From_Google.xlsx', index=False)
+# # # #                 print(f'The links were found and saved in "found_links.xlsx".')
+# # # #             else:
+# # # #                 print("No results found. No links were saved.")
+# # # #
+# # # #
+# # # # if __name__ == '__main__':
+# # # #     bot = Search_About_News()
+# # # #     bot.main()
+# # # #
+# # # #
+# # # #
+# # # # import re
+# # # # from bs4 import BeautifulSoup
+# # # # import requests
+# # # # import pandas as pd
+# # # # import difflib
+# # # # import pycountry
+# # # # import chardet
+# # # # from urllib.parse import quote
+# # # # import os
+# # # #
+# # # # class Search_About_News:
+# # # #
+# # # #     def get_links_from_file(self, file_path):
+# # # #         with open(file_path, 'r', encoding='utf-8') as file:
+# # # #             links = file.readlines()
+# # # #         return [link.strip() for link in links if link.strip()]
+# # # #
+# # # #     def get_words_from_file(self, words_file_path):
+# # # #         with open(words_file_path, 'r', encoding='utf-8') as file:
+# # # #             words = file.readlines()
+# # # #         return list(set([word.strip() for word in words if word.strip()]))
+# # # #
+# # # #     def get_response(self, words, links):
+# # # #         found_links = {}
+# # # #         for word in words:
+# # # #             found_links[word] = []
+# # # #             for link in links:
+# # # #                 url = f'{link}{word}'
+# # # #                 response = requests.get(url)
+# # # #                 if response.status_code == 200:
+# # # #                     soup = BeautifulSoup(response.text, 'html.parser')
+# # # #                     for a_tag in soup.find_all('a', href=True):
+# # # #                         if word in a_tag.get_text():
+# # # #                             found_links[word].append(a_tag['href'])
+# # # #                             break
+# # # #                 else:
+# # # #                     with open('links_need_to_done_manually.txt', 'a', encoding='utf-8') as file:
+# # # #                         file.write(f'{link}\n')
+# # # #         return found_links
+# # # #
+# # # #     def get_countries_from_file(self, countries_file_path):
+# # # #         with open(countries_file_path, 'r', encoding='utf-8') as file:
+# # # #             return [country.strip() for country in file if country.strip()]
+# # # #
+# # # #     def create_google_search_links(self, countries):
+# # # #         google_links = []
+# # # #         for country in countries:
+# # # #             try:
+# # # #                 country_obj = pycountry.countries.lookup(country)
+# # # #                 zip_code = country_obj.alpha_2.lower()
+# # # #                 google_links.append(f"https://www.google.com.{zip_code}/")
+# # # #             except LookupError:
+# # # #                 print(f"Country '{country}' not found. Skipping...")
+# # # #         return google_links
+# # # #
+# # # #     def search_and_get_links(self, query, num_results=10):
+# # # #         try:
+# # # #             search_results = search(query, num_results=num_results, lang='en')
+# # # #             return list(search_results)
+# # # #         except Exception as e:
+# # # #             print(f"An error occurred: {e}")
+# # # #             return []
+# # # #
+# # # #     def search_for_word_in_google(self, words, arab_countries_google_urls):
+# # # #         result_links = {}
+# # # #         for word in words:
+# # # #             result_links[word] = []
+# # # #             for url in arab_countries_google_urls:
+# # # #                 search_url = f'{url}search?q={word}'
+# # # #                 try:
+# # # #                     response = requests.get(search_url)
+# # # #                     if response.status_code == 200:
+# # # #                         soup = BeautifulSoup(response.content, "html.parser")
+# # # #                         links = soup.find_all("a")
+# # # #                         links_found = 0
+# # # #                         for link in links:
+# # # #                             href = link.get("href")
+# # # #                             if href.startswith("/url?q="):
+# # # #                                 result_links[word].append(href.replace("/url?q=", "").split("&sa=")[0])
+# # # #                                 links_found += 1
+# # # #                                 if links_found >= 10:
+# # # #                                     break
+# # # #                 except requests.exceptions.RequestException as e:
+# # # #                     continue
+# # # #
+# # # #         return result_links
+# # # #
+# # # #     def main(self):
+# # # #         x = input('Start Task From Domains enter 1\nFrom Google enter 2\n')
+# # # #         words = self.get_words_from_file('news.txt')
+# # # #         if x == '1':
+# # # #             links = self.get_links_from_file('links.txt')
+# # # #             found_links = self.get_response(words, links)
+# # # #             print(found_links)
+# # # #
+# # # #             df = pd.DataFrame.from_dict(found_links, orient='index').transpose()
+# # # #             df = df.fillna('')  # Replace any remaining None values with empty string
+# # # #             for col in df.columns:
+# # # #                 max_len = max([len(str(cell)) for cell in df[col]])
+# # # #                 width = max(50, max_len)
+# # # #                 df[col] = df[col].astype(str).str.pad(width, side='right')
+# # # #
+# # # #             if os.path.exists('found_links_From_Domains.xlsx'):
+# # # #                 os.remove('found_links_From_Domains.xlsx')
+# # # #
+# # # #             df.to_excel('found_links_From_Domains.xlsx', index=False)  # Save new data
+# # # #             print(f'The links were found and saved in "found_links_From_Domains.xlsx".')
+# # # #
+# # # #         else:
+# # # #             countries = self.get_countries_from_file('countries.txt')
+# # # #             searching_urls = self.create_google_search_links(countries)
+# # # #             found = self.search_for_word_in_google(words, searching_urls)
+# # # #             df = pd.DataFrame.from_dict(found, orient='index').transpose()
+# # # #             df = df.fillna('')
+# # # #             if not df.empty:
+# # # #                 max_len = max([len(str(cell)) for col in df.columns for cell in df[col]])
+# # # #                 for col in df.columns:
+# # # #                     max_len = max([len(str(cell)) for cell in df[col]])
+# # # #                     width = max(50, max_len)
+# # # #                     df[col] = df[col].astype(str).str.pad(width, side='right')
+# # # #
+# # # #                 if os.path.exists('found_links_From_Google.xlsx'):
+# # # #                     os.remove('found_links_From_Google.xlsx')
+# # # #
+# # # #                 df.to_excel('found_links_From_Google.xlsx', index=False)
+# # # #                 print(f'The links were found and saved in "found_links_From_Google.xlsx".')
+# # # #             else:
+# # # #                 print("No results found. No links were saved.")
+# # # #
+# # # #
+# # # # if __name__ == '__main__':
+# # # #     bot = Search_About_News()
+# # # #     bot.main()
+# # # #
+# # #
+# # #
+# # #
+# # # import re
+# # # import time
+# # # from bs4 import BeautifulSoup
+# # # import requests
+# # # import pandas as pd
+# # # import difflib
+# # # from urllib.parse import quote
+# # # import pycountry
+# # # import urllib.parse
+# # # import xlsxwriter
+# # # from urllib.parse import urlparse, urljoin
+# # # from dateutil import parser as date_parser
+# # # import chardet
+# # # import calendar
+# # # from newspaper import Article, ArticleException
+# # # import webbrowser
+# # # from datetime import datetime
+# # # from selenium import webdriver
+# # # from urllib.parse import quote
+# # # from ChromeDriver import WebDriver
+# # # import os
+# # #
+# # #
+# # # class Search_About_News:
+# # #
+# # #     def __init__(self):
+# # #         self.driver = None
+# # #
+# # #     def start_driver(self):
+# # #         self.driver = WebDriver.start_driver(self)
+# # #         return self.driver
+# # #
+# # #     def get_links_from_file(self, file_path):
+# # #         with open(file_path, 'r', encoding='utf-8') as file:
+# # #             links = file.readlines()
+# # #         return [urllib.parse.unquote(link.strip()) for link in links if link.strip()]
+# # #
+# # #     def get_words_from_file(self, words_file_path):
+# # #         with open(words_file_path, 'r', encoding='utf-8') as file:
+# # #             words = file.readlines()
+# # #         return list(set([word.strip() for word in words if word.strip()]))
+# # #
+# # #     def get_screen_shots(self, found_links, folder_path):
+# # #         for word, links in found_links.items():
+# # #             word_folder_path = os.path.join(folder_path, 'screenshots')
+# # #             os.makedirs(word_folder_path, exist_ok=True)
+# # #             for link in links:
+# # #                 try:
+# # #                     self.driver.get(link)
+# # #                     time.sleep(1)
+# # #                     screenshot_name = link.replace('/', '_').replace(':', '_') + ".png"  # Replace invalid characters
+# # #                     screenshot_path = os.path.join(word_folder_path, screenshot_name)
+# # #                     self.driver.save_screenshot(screenshot_path)
+# # #                 except Exception as e:
+# # #                     print(f"Error taking screenshot of {link}: {e}")
+# # #
+# # #     def get_response(self, words, links, folder_path):
+# # #         found_links = {}
+# # #         for word in words:
+# # #             found_links[word] = []
+# # #             for link in links:
+# # #                 match_link = False
+# # #                 url = urljoin(link, word)
+# # #                 response = requests.get(url)
+# # #                 if response.status_code == 200:
+# # #                     soup = BeautifulSoup(response.content, 'html.parser')
+# # #                     all_links = soup.find_all('a', href=True)
+# # #
+# # #                     matching_links_partial = [urljoin(link, a_tag['href']) for a_tag in all_links if
+# # #                                               word.lower() in a_tag.text.lower()]
+# # #                     if matching_links_partial:
+# # #                         found_links[word].append(matching_links_partial[0])
+# # #                         match_link = True
+# # #
+# # #                     if not match_link:
+# # #                         for a_tag in all_links:
+# # #                             if word in a_tag.get_text():
+# # #                                 found_links[word].append(urljoin(link, a_tag['href']))
+# # #                                 match_link = True
+# # #                                 break
+# # #
+# # #                     if not match_link:
+# # #                         regex = re.compile(r'\b' + re.escape(word) + r'\b', re.IGNORECASE)
+# # #                         matching_links_regex = [urljoin(link, a_tag['href']) for a_tag in all_links if
+# # #                                                 regex.search(a_tag.get_text())]
+# # #                         if matching_links_regex:
+# # #                             found_links[word].append(matching_links_regex[0])
+# # #                             match_link = True
+# # #
+# # #                     if not match_link:
+# # #                         found_links[word].append(url)
+# # #
+# # #
+# # #             # create ScreanShots folder
+# # #             screen_path = os.path.join(folder_path, 'screenshots')
+# # #             os.makedirs(screen_path, exist_ok=True)
+# # #             self.start_driver()
+# # #             for link in found_links[word]:
+# # #                 self.driver.get(link)
+# # #                 time.sleep(1)
+# # #                 screenshot_name = link.replace('/', '_').replace(':', '_') + ".png"  # Replace invalid characters
+# # #                 screenshot_path = os.path.join(screen_path, screenshot_name)  # Use screen_path instead of folder_path
+# # #                 self.driver.save_screenshot(screenshot_path)
+# # #
+# # #         return found_links
+# # #
+# # #     # def get_response(self, words, links):
+# # #     #     found_links = {}
+# # #     #     for word in words:
+# # #     #         encoded_word = urllib.parse.quote(word, safe='')
+# # #     #         found_links[word] = []
+# # #     #         find_links = False
+# # #     #         for link in links:
+# # #     #             url = f'{link}{encoded_word}'
+# # #     #             response = requests.get(url)
+# # #     #             if response.status_code == 200:
+# # #     #                 soup = BeautifulSoup(response.text, 'html.parser')
+# # #     #                 links_in_page = soup.find_all('a', href=True)
+# # #     #
+# # #     #                 for page_link in links_in_page:
+# # #     #                     if re.search(word, page_link['href'], re.IGNORECASE):
+# # #     #                         found_links[word].append(page_link['href'])
+# # #     #                         find_links = True
+# # #     #                         break  # Stop searching this page if link is found
+# # #     #
+# # #     #                 if not find_links and links_in_page:
+# # #     #                     found_links[word].append(links_in_page[0]['href'])
+# # #     #
+# # #     #                 if not find_links:
+# # #     #                     with open('links_need_to_done_manually.txt', 'a', encoding='utf-8') as file:
+# # #     #                         file.write(f'{url}\n')
+# # #     #             else:
+# # #     #                 with open('links_need_to_done_manually.txt', 'a', encoding='utf-8') as file:
+# # #     #                     file.write(f'{url}\n')
+# # #     #
+# # #     #     return found_links
+# # #
+# # #     # def get_response(self, words, links):
+# # #     #     found_links = {}
+# # #     #     for word in words:
+# # #     #         encoded_word = urllib.parse.quote(word, safe='')
+# # #     #         found_links[word] = []
+# # #     #         for link in links:
+# # #     #             url = f'{link}{encoded_word}'
+# # #     #             response = requests.get(url)
+# # #     #             if response.status_code == 200:
+# # #     #                 soup = BeautifulSoup(response.text, 'html.parser')
+# # #     #                 found_exact_match = False
+# # #     #                 for a_tag in soup.find_all('a', href=True):
+# # #     #                     if word in a_tag.get_text():
+# # #     #                         found_links[word].append(a_tag['href'])
+# # #     #                         found_exact_match = True
+# # #     #                         break
+# # #     #                 if not found_exact_match:
+# # #     #                     with open('links_need_to_done_manually.txt', 'a', encoding='utf-8') as file:
+# # #     #                         file.write(f'{url}\n')
+# # #     #             else:
+# # #     #                 with open('links_need_to_done_manually.txt', 'a', encoding='utf-8') as file:
+# # #     #                     file.write(f'{url}\n')
+# # #     #     return found_links
+# # #
+# # #     def convert_arabic_month_to_english(self, arabic_month):
+# # #         arabic_months = [
+# # #             "?????", "??????", "????", "?????", "????", "?????",
+# # #             "?????", "?????", "??????", "??????", "??????", "??????"
+# # #         ]
+# # #         english_months = list(calendar.month_name)[1:]
+# # #
+# # #         for arabic, english in zip(arabic_months, english_months):
+# # #             if arabic in arabic_month:
+# # #                 return english
+# # #         return None
+# # #
+# # #     # def get_history(self, links):
+# # #     #     for link in links:
+# # #     #         response = requests.get(link)
+# # #     #         if response.status_code == 200:
+# # #     #             soup = BeautifulSoup(response.content, 'html.parser')
+# # #     #             text_content = soup.get_text()
+# # #     #
+# # #     #             date_patterns = [
+# # #     #                 r'\d{1,2}\s+\w+\s+\d{4}',  # Matches patterns like '31 March 2024', '31 Mar 2024', '31 ???? 2024'
+# # #     #                 r'\d{1,2}/\d{1,2}/\d{4}',  # Matches patterns like '31/3/2024', '1/12/2024'
+# # #     #                 r'\d{4}-\d{2}-\d{2}',  # Matches patterns like '2024-03-31'
+# # #     #                 r'\d{1,2}\s+\w+\s+\d{1,2}',  # Matches patterns like '31 March', '31 Mar'
+# # #     #             ]
+# # #     #
+# # #     #             date_found = False
+# # #     #             for pattern in date_patterns:
+# # #     #                 date_str = re.search(pattern, text_content)
+# # #     #                 if date_str:
+# # #     #                     date_str = date_str.group()
+# # #     #                     # Convert Arabic month names to English
+# # #     #                     date_str = re.sub(r'(\d{1,2}\s+)(\w+\s+)(\d{4})',
+# # #     #                                       lambda
+# # #     #                                           m: f"{m.group(1)}{self.convert_arabic_month_to_english(m.group(2))} {m.group(3)}",
+# # #     #                                       date_str)
+# # #     #                     try:
+# # #     #                         date = date_parser.parse(date_str, fuzzy=True)
+# # #     #                         print(date)
+# # #     #                         date_found = True
+# # #     #                         break  # Exit the loop if a date is found
+# # #     #                     except ValueError:
+# # #     #                         print(f"Could not parse date: {date_str}")
+# # #     #
+# # #     #             if date_found:
+# # #     #                 continue  # Move to the next link
+# # #     # def get_history(self, links, words):
+# # #     #     for link in links:
+# # #     #         for word in words:
+# # #     #             response = requests.get(link)
+# # #     #             if response.status_code == 200:
+# # #     #                 soup = BeautifulSoup(response.content, 'html.parser')
+# # #     #                 divs = soup.find_all('div')
+# # #     #                 for div in divs:
+# # #     #                     title = div.find('h1')  # Assuming the title is in an <h1> tag
+# # #     #                     if title and title.text.strip() == word:
+# # #     #                         date_patterns = [
+# # #     #                             r'\d{1,2}\s+\w+\s+\d{4}',
+# # #     #                             r'\d{1,2}/\d{1,2}/\d{4}',  # Matches patterns like '31/3/2024', '1/12/2024'
+# # #     #                             r'\d{4}-\d{2}-\d{2}',  # Matches patterns like '2024-03-31'
+# # #     #                             r'\d{1,2}\s+\w+\s+\d{1,2}',  # Matches patterns like '31 March', '31 Mar'
+# # #     #                         ]
+# # #     #
+# # #     #                         text_content = div.get_text()
+# # #     #
+# # #     #                         for pattern in date_patterns:
+# # #     #                             date_str = re.search(pattern, text_content)
+# # #     #                             if date_str:
+# # #     #                                 date_str = date_str.group()
+# # #     #                                 date_str = re.sub(r'(\d{1,2}\s+)(\w+\s+)(\d{4})',
+# # #     #                                                   lambda m: f"{m.group(1)}{self.convert_arabic_month_to_english(m.group(2))} {m.group(3)}",
+# # #     #                                                   date_str)
+# # #     #                                 try:
+# # #     #                                     date = date_parser.parse(date_str, fuzzy=True)
+# # #     #                                     print(f'{link}: {date}')
+# # #     #                                     break  # Exit the loop if a date is found
+# # #     #                                 except ValueError:
+# # #     #                                     print(f"Could not parse date: {date_str}")
+# # #     #                         break  # Exit the loop if the title is found
+# # #     #             else:
+# # #     #                 print(f'this not work :\n{link}')
+# # #
+# # #     def get_history(self, link):
+# # #             encoded_link = urllib.parse.quote(link, safe='/:')
+# # #             response = requests.get(encoded_link)
+# # #             if response.status_code == 200:
+# # #                 soup = BeautifulSoup(response.content, 'html.parser')
+# # #                 title = soup.find('title').get_text().strip()
+# # #                 text_content = soup.get_text()
+# # #
+# # #                 # Remove the title from the text content
+# # #                 text_content = text_content.replace(title, '')
+# # #
+# # #                 date_patterns = [
+# # #                     r'\d{1,2}\s+\w+\s+\d{4}',  # Matches patterns like '31 March 2024', '31 Mar 2024', '31 ???? 2024'
+# # #                     r'\d{1,2}/\d{1,2}/\d{4}',  # Matches patterns like '31/3/2024', '1/12/2024'
+# # #                     r'\d{4}-\d{2}-\d{2}',  # Matches patterns like '2024-03-31'
+# # #                     r'\d{1,2}\s+\w+\s+\d{1,2}',  # Matches patterns like '31 March', '31 Mar'
+# # #                 ]
+# # #
+# # #                 date_found = False
+# # #                 for pattern in date_patterns:
+# # #                     date_str = re.search(pattern, text_content)
+# # #                     if date_str:
+# # #                         date_str = date_str.group()
+# # #                         # Convert Arabic month names to English
+# # #                         date_str = re.sub(r'(\d{1,2}\s+)(\w+\s+)(\d{4})',
+# # #                                           lambda
+# # #                                               m: f"{m.group(1)}{self.convert_arabic_month_to_english(m.group(2))} {m.group(3)}",
+# # #                                           date_str)
+# # #                         try:
+# # #                             date = date_parser.parse(date_str, fuzzy=True)
+# # #                             date_found = True
+# # #                             break  # Exit the loop if a date is found
+# # #                         except ValueError:
+# # #                             pass
+# # #
+# # #                 if not date_found:
+# # #                     pass
+# # #             else:
+# # #                 pass
+# # #
+# # #     # def get_history1(self, founded_links):
+# # #     #     dates = {}
+# # #     #     for word, links in founded_links.items():
+# # #     #         word_dates = []
+# # #     #         for link in links:
+# # #     #             article = Article(link)
+# # #     #             article.download()
+# # #     #             article.parse()
+# # #     #             publish_date = article.publish_date
+# # #     #
+# # #     #             if publish_date:
+# # #     #                 formatted_date = publish_date.strftime("%d/%m/%Y")
+# # #     #                 word_dates.append(formatted_date)
+# # #     #             else:
+# # #     #                 self.get_history(link)
+# # #     #         dates[word] = word_dates
+# # #     #     return dates
+# # #     def get_history1(self, founded_links):
+# # #         dates = {}
+# # #         for word, links in founded_links.items():
+# # #             word_dates = []
+# # #             for link in links:
+# # #                 try:
+# # #                     article = Article(link)
+# # #                     article.download()
+# # #                     article.parse()
+# # #                     publish_date = article.publish_date
+# # #
+# # #                     if publish_date:
+# # #                         # Format date without time
+# # #                         formatted_date = publish_date.strftime("%d/%m/%Y")
+# # #                         word_dates.append(formatted_date)
+# # #                 except ArticleException as e:
+# # #                     continue  # Continue with the next link
+# # #                 except Exception as e:
+# # #                     continue  # Continue with the next link
+# # #
+# # #             dates[word] = word_dates
+# # #         return dates
+# # #
+# # #     def search_and_get_links(self, query, num_results=10):
+# # #         try:
+# # #             search_results = search(query, num_results=num_results, lang='en')
+# # #             return list(search_results)
+# # #         except Exception as e:
+# # #             print(f"An error occurred: {e}")
+# # #             return []
+# # #
+# # #     def search(self, words, browzers_links):
+# # #         result_links = {}
+# # #         for word in words:
+# # #             result_links[word] = []
+# # #             for url in browzers_links:
+# # #                 search_url = f'{url}{word}'
+# # #                 try:
+# # #                     response = requests.get(search_url)
+# # #                     if response.status_code == 200:
+# # #                         soup = BeautifulSoup(response.content, "html.parser")
+# # #                         links = soup.find_all("a")
+# # #                         links_found = 0
+# # #                         skip_first_link = True  # Flag to skip the first link
+# # #                         for link in links:
+# # #                             href = link.get("href")
+# # #                             if href and href.startswith("/url?q="):
+# # #                                 if skip_first_link:
+# # #                                     skip_first_link = False
+# # #                                     continue  # Skip the first link
+# # #                                 result_links[word].append(href.replace("/url?q=", "").split("&sa=")[0])
+# # #                                 links_found += 1
+# # #                                 if links_found >= 10:
+# # #                                     break
+# # #                 except requests.exceptions.RequestException as e:
+# # #                     continue
+# # #         return result_links
+# # #
+# # #     def write_links_to_excel(self, df, excel_path):
+# # #         # Normalize the path
+# # #         excel_path = os.path.normpath(excel_path)
+# # #
+# # #         # Create a Pandas Excel writer using xlsxwriter engine
+# # #         with pd.ExcelWriter(excel_path, engine='xlsxwriter') as writer:
+# # #             df.to_excel(writer, index=False, sheet_name='Sheet1')
+# # #
+# # #             # Get the xlsxwriter workbook and worksheet objects
+# # #             workbook = writer.book
+# # #             worksheet = writer.sheets['Sheet1']
+# # #
+# # #             # Add a format for the hyperlinks
+# # #             cell_format = workbook.add_format({'font_color': 'blue', 'underline': True})
+# # #
+# # #             # Iterate over the DataFrame and write the links as hyperlinks
+# # #             for idx, link in enumerate(df['Link']):
+# # #                 worksheet.write_url(idx + 1, 0, link, cell_format)
+# # #
+# # #     def check_if_thif(self):
+# # #         response = requests.get("https://pastebin.com/raw/Qw8adjpd")
+# # #         data = response.text
+# # #         if data == "roro":
+# # #             return True
+# # #
+# # #     def main(self):
+# # #         # print("if 1 >>> Please attach file (links.txt, news.txt) with program in the same directory.\n"
+# # #         #       "if 2 >>> Please attach file (countries.txt, news.txt) with program in the same directory.")
+# # #
+# # #         # x = input('From Domains enter: 1\nFrom Google enter: 2\n>> ')
+# # #         # words = self.get_words_from_file('news.txt')
+# # #         # if x == '1':
+# # #         words = self.get_words_from_file('news.txt')
+# # #         links = self.get_links_from_file('links.txt')
+# # #
+# # #         for word in words:
+# # #             # make folder
+# # #             folder_name = word.replace(':', '-').replace('"', '')
+# # #             folder_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), folder_name)
+# # #             os.makedirs(folder_path, exist_ok=True)
+# # #
+# # #             # get data
+# # #             found_links = self.get_response(words, links, folder_path)
+# # #             print(found_links)
+# # #             dates = self.get_history1(found_links)
+# # #
+# # #             # make excel sheet for domains links
+# # #             df = pd.DataFrame(columns=['Link', 'Date'])
+# # #             for link, date in zip(found_links[word], dates.get(word, [])):
+# # #                 df = pd.concat([df, pd.DataFrame({'Link': [link], 'Date': [date]})], ignore_index=True)
+# # #             excel_path = os.path.join(folder_path, f'links_and_dates.xlsx')
+# # #             self.write_links_to_excel(df, excel_path)
+# # #
+# # #
+# # #
+# # #
+# # #         #
+# # #         # else:
+# # #         #     links = self.get_links_from_file('countries.txt')
+# # #         #     founded_links = self.search(words, links)
+# # #         #     dates = self.get_history1(founded_links)
+# # #         #     for word, word_links in founded_links.items():
+# # #         #         df = pd.DataFrame(columns=['Link', 'Date'])
+# # #         #         for link, date in zip(word_links, dates.get(word, [])):
+# # #         #             df = pd.concat([df, pd.DataFrame({'Link': [link], 'Date': [date]})], ignore_index=True)
+# # #         #         excel_path = os.path.join(f'ofahh_links_and_dates_in_brosers.xlsx')
+# # #         #         self.write_links_to_excel(df, excel_path)
+# # #
+# # #
+# # #
+# # #
+# # #
+# # #
+# # # if __name__ == '__main__':
+# # #     bot = Search_About_News()
+# # #     bot.main()
+# # #
+# # #     # try:
+# # #     #     check = bot.check_if_thif()
+# # #     #     if check == True:
+# # #     #         bot.main()
+# # #     #         time.sleep(10)
+# # #     #     else:
+# # #     #         print("There is something went wrong please try again")
+# # #     #         time.sleep(10)
+# # #     # except:
+# # #     #     print("There is something went wrong please try again")
+# # #     #     time.sleep(10)
+# # #
+# # #
+# # #
+# #
+# #
+# #
+# #
+# #
+# # import re
+# # from newspaper import Article
+# # from dateutil import parser as date_parser
+# # import calendar
+# #
+# # # Mapping of Arabic to English month names
+# # arabic_months = [
+# #     "?????", "??????", "????", "?????", "????", "?????",
+# #     "?????", "?????", "??????", "??????", "??????", "??????"
+# # ]
+# #
+# # english_months = list(calendar.month_name)[1:]
+# # month_map = dict(zip(arabic_months, english_months))
+# #
+# # # Function to convert Arabic month names to English
+# # def convert_arabic_month_to_english(month_name):
+# #     return month_map.get(month_name, None)
+# #
+# # for link in links:
+# #     try:
+# #         article = Article(link)
+# #         article.download()
+# #         article.parse()
+# #         publish_date = article.publish_date
+# #
+# #         if publish_date:
+# #             # Format date without time
+# #             formatted_date = publish_date.strftime("%d/%m/%Y")
+# #             print(f"Link: {link} - Date: {formatted_date}")
+# #         else:
+# #             # Fallback: Use regular expressions to find date patterns in the text content
+# #             text_content = article.text
+# #             date_patterns = [
+# #                 r'\d{1,2}\s+\w+\s+\d{4}',  # Matches patterns like '31 March 2024', '31 Mar 2024', '31 ???? 2024'
+# #                 r'\d{1,2}/\d{1,2}/\d{4}',  # Matches patterns like '31/3/2024', '1/12/2024'
+# #                 r'\d{4}-\d{2}-\d{2}',  # Matches patterns like '2024-03-31'
+# #                 r'\d{1,2}\s+\w+\s+\d{1,2}',  # Matches patterns like '31 March', '31 Mar'
+# #                 r'\d{1,2}\s+\w+\s+\d{4}',  # Matches patterns like '31 March 2024', '31 Mar 2024'
+# #             ]
+# #
+# #             for pattern in date_patterns:
+# #                 match = re.search(pattern, text_content)
+# #                 if match:
+# #                     date_str = match.group()
+# #                     # Convert Arabic month names to English
+# #                     date_str = re.sub(r'(\d{1,2}\s+)(\w+\s+)(\d{4})',
+# #                                       lambda m: f"{m.group(1)}{convert_arabic_month_to_english(m.group(2))} {m.group(3)}",
+# #                                       date_str)
+# #                     formatted_date = date_parser.parse(date_str, fuzzy=True).strftime("%d/%m/%Y")
+# #                     print(f"Link: {link} - Date (fallback): {formatted_date}")
+# #                     break
+# #             else:
+# #                 print(f"Could not extract publish date from: {link}")
+# #
+# #     except Exception as e:
+# #         print(f"Error processing {link}: {e}")
+#
+#
+# import re
+# from newspaper import Article
+# from dateutil import parser as date_parser
+# import calendar
+# from urllib.parse import urlparse, urljoin
+# import os
+# import requests
+# from bs4 import BeautifulSoup
+# from selenium import webdriver
+# from selenium.webdriver.common.by import By
+# from selenium.webdriver.support.ui import WebDriverWait
+# from selenium.webdriver.support import expected_conditions as EC
+#
+#
+# def extract_arabic_date(text):
+#     arabic_date_patterns = [
+#         r'\d{1,2}\s+?????\s+\d{4}', r'\d{1,2}\s+??????\s+\d{4}', r'\d{1,2}\s+????\s+\d{4}',
+#         r'\d{1,2}\s+?????\s+\d{4}', r'\d{1,2}\s+????\s+\d{4}', r'\d{1,2}\s+?????\s+\d{4}',
+#         r'\d{1,2}\s+?????\s+\d{4}', r'\d{1,2}\s+?????\s+\d{4}', r'\d{1,2}\s+??????\s+\d{4}',
+#         r'\d{1,2}\s+??????\s+\d{4}', r'\d{1,2}\s+??????\s+\d{4}', r'\d{1,2}\s+??????\s+\d{4}'
+#     ]
+#     for pattern in arabic_date_patterns:
+#         match = re.search(pattern, text)
+#         if match:
+#             return match.group()
+#
+#     return None
+#
+# def get_response(words, links, folder_path):
+#     found_links = {}
+#     for word in words:
+#         found_links[word] = []
+#         for link in links:
+#             match_link = False
+#             URL = f'{link}{word}'
+#             response = requests.get(URL)
+#             if response.status_code == 200:
+#                 soup = BeautifulSoup(response.content, 'html.parser')
+#                 all_links = soup.find_all('a', href=True)
+#                 search_url_parsed = urlparse(link)
+#                 domain = f'{search_url_parsed.scheme}://{search_url_parsed.netloc}'
+#                 for a_tag in all_links:
+#                     href = a_tag.get('href')
+#                     if href:
+#                         full_link = urljoin(domain, href)
+#                         if word.lower() in a_tag.get_text().lower():
+#                             found_links[word].append(full_link)
+#                             match_link = True
+#                             break
+#                 if not match_link:
+#                     if all_links:
+#                         first_link = urljoin(domain, all_links[0]['href'])
+#                         found_links[word].append(first_link)
+#                     else:
+#                         found_links[word].append(URL)
+#
+#         for link in found_links[word]:
+#             try:
+#                 article = Article(link, language='ar')  # Specify language as Arabic
+#                 article.download()
+#                 article.parse()
+#                 publish_date = article.publish_date
+#
+#                 if publish_date:
+#                     formatted_date = publish_date.strftime("%d/%m/%Y")
+#                     # Take a screenshot
+#                     screenshot_path = os.path.join(folder_path, f'{word}_screenshot.png')
+#                     take_screenshot(link, screenshot_path)
+#                     found_links[word].append({"link": link, "date": formatted_date, "screenshot_path": screenshot_path})
+#                     print(f"Link: {link} - Date: {formatted_date}")  # Add a print statement for debugging
+#                 else:
+#                     text_content = article.text
+#                     arabic_date = extract_arabic_date(text_content)
+#                     if arabic_date:
+#                         english_date = convert_arabic_date_to_english(arabic_date)
+#                         formatted_date = date_parser.parse(english_date, fuzzy=True).strftime("%d/%m/%Y")
+#                         # Take a screenshot
+#                         screenshot_path = os.path.join(folder_path, f'{word}_screenshot.png')
+#                         take_screenshot(link, screenshot_path)
+#                         found_links[word].append({"link": link, "date": formatted_date, "screenshot_path": screenshot_path})
+#                         print(f"Link: {link} - Date: {formatted_date}")  # Add a print statement for debugging
+#                     else:
+#                         print(f"Could not extract publish date from: {link}")
+#
+#             except Exception as e:
+#                 print(f"Error processing {link}: {e}")
+#     return found_links
+#
+# def convert_arabic_date_to_english(arabic_date):
+#     # Implement the conversion logic here
+#     return None  # Replace this with the actual conversion logic
+#
+# words = ["????"]  # List of words to search
+# links = [
+#     'https://sabq.org/search?q=',
+# ]
+# folder_path = "screenshots"  # Folder path to save screenshots
+# result = get_response(words, links, folder_path)
+# print(result)
+
+
+import re
+import time
+from bs4 import BeautifulSoup
+import requests
+import pandas as pd
+import difflib
+from urllib.parse import quote
+import pycountry
+import urllib.parse
+import xlsxwriter
+from urllib.parse import urlparse, urljoin
+from dateutil import parser as date_parser
+import chardet
+from difflib import SequenceMatcher
+import calendar
+from newspaper import Article, ArticleException
+import webbrowser
+from datetime import datetime
+from selenium import webdriver
+from urllib.parse import quote
+from ChromeDriver import WebDriver
+import os
+
+
+class Search_About_News:
+
+    def __init__(self):
+        self.driver = None
+
+    def start_driver(self):
+        self.driver = WebDriver.start_driver(self)
+        return self.driver
+
+    def get_links_from_file(self, file_path):
+        with open(file_path, 'r', encoding='utf-8') as file:
+            links = file.readlines()
+        return [urllib.parse.unquote(link.strip()) for link in links if link.strip()]
+
+    def get_words_from_file(self, words_file_path):
+        with open(words_file_path, 'r', encoding='utf-8') as file:
+            words = file.readlines()
+        return list(set([word.strip() for word in words if word.strip()]))
+
+    def get_screen_shots(self, found_links, folder_path):
+        for word, links in found_links.items():
+            word_folder_path = os.path.join(folder_path, 'screenshots')
+            os.makedirs(word_folder_path, exist_ok=True)
+            for link in links:
+                try:
+                    self.driver.get(link)
+                    time.sleep(1)
+                    screenshot_name = link.replace('/', '_').replace(':', '_') + ".png"  # Replace invalid characters
+                    screenshot_path = os.path.join(word_folder_path, screenshot_name)
+                    self.driver.save_screenshot(screenshot_path)
+                except Exception as e:
+                    print(f"Error taking screenshot of {link}: {e}")
+
+    def convert_arabic_month_to_english(self, month_name):
+        arabic_months = [
+            "?????", "??????", "????", "?????", "????", "?????",
+            "?????", "?????", "??????", "??????", "??????", "??????"
+        ]
+        english_months = list(calendar.month_name)[1:]
+        month_map = dict(zip(arabic_months, english_months))
+        return month_map.get(month_name, None)
+
+    def get_response(self, words, links, folder_path):
+        found_links = {}
+        for word in words:
+            found_links[word] = []
+            for link in links:
+                match_link = False
+                URL = f'{link}{word}'
+                response = requests.get(URL)
+                if response.status_code == 200:
+                    soup = BeautifulSoup(response.content, 'html.parser')
+                    all_links = soup.find_all('a', href=True)
+                    search_url_parsed = urlparse(link)
+                    domain = f'{search_url_parsed.scheme}://{search_url_parsed.netloc}'
+                    for a_tag in all_links:
+                        href = a_tag.get('href')
+                        if href:
+                            full_link = urljoin(domain, href)
+                            if word.lower() in a_tag.get_text().lower():
+                                found_links[word].append({'link': full_link})
+                                match_link = True
+                                break
+
+                    if not match_link:
+                        if all_links:
+                            first_link = urljoin(domain, all_links[0]['href'])
+                            found_links[word].append({'link': first_link})
+                        else:
+                            found_links[word].append({'link': URL})
+                else:
+                    with open('Wrong_links.txt', 'w') as file:
+                        file.write(link + '\n')
+
+            screen_path = os.path.join(folder_path, 'screenshots')
+            os.makedirs(screen_path, exist_ok=True)
+            self.start_driver()
+            link_data_list = []
+            for link_data in found_links[word]:
+                    self.driver.get(link_data['link'])
+                    time.sleep(1)
+                    screenshot_name = link_data['link'].replace('/', '_').replace(':', '_') + ".png"
+                    screenshot_path = os.path.join(screen_path, screenshot_name)
+                    self.driver.save_screenshot(screenshot_path)
+
+                    article = Article(link_data['link'])
+                    article.download()
+                    article.parse()
+                    publish_date = article.publish_date
+
+                    if publish_date:
+                        formatted_date = publish_date.strftime("%d/%m/%Y")
+                        link_data_list.append(
+                            {'link': link_data['link'], 'date': formatted_date})
+                    else:
+                        text_content = article.text
+                        date_patterns = [
+                            r'\d{1,2}\s+\w+\s+\d{4}',
+                            r'\d{1,2}/\d{1,2}/\d{4}',
+                            r'\d{4}-\d{2}-\d{2}',
+                            r'\d{1,2}\s+\w+\s+\d{1,2}',
+                            r'\d{1,2}\s+\w+\s+\d{4}',
+                        ]
+
+                        for pattern in date_patterns:
+                            match = re.search(pattern, text_content)
+                            if match:
+                                date_str = match.group()
+                                date_str = re.sub(r'(\d{1,2}\s+)(\w+\s+)(\d{4})',
+                                                  lambda
+                                                      m: f"{m.group(1)}{self.convert_arabic_month_to_english(m.group(2))} {m.group(3)}",
+                                                  date_str)
+                                formatted_date = date_parser.parse(date_str, fuzzy=True).strftime("%d/%m/%Y")
+                                link_data_list.append(
+                                    {'link': link_data['link'], 'date': formatted_date})
+                                break
+                        else:
+                            link_data_list.append({'link': link_data['link'], 'date': 'not found'})
+            found_links[word] = link_data_list
+        return found_links
+
+    def get_history1(self, founded_links):
+        dates = {}
+        for word, links in founded_links.items():
+            word_dates = []
+            for link in links:
+                try:
+                    article = Article(link)
+                    article.download()
+                    article.parse()
+                    publish_date = article.publish_date
+
+                    if publish_date:
+                        # Format date without time
+                        formatted_date = publish_date.strftime("%d/%m/%Y")
+                        word_dates.append(formatted_date)
+                    else:
+                        encoded_link = urllib.parse.quote(link, safe='/:')
+                        response = requests.get(encoded_link)
+                        if response.status_code == 200:
+                            soup = BeautifulSoup(response.content, 'html.parser')
+                            text_content = soup.get_text()
+
+                            # Find the word in the text content and extract the date
+                            date_str = None
+                            for line in text_content.split('\n'):
+                                if word in line:
+                                    date_str = line.strip()
+                                    break
+
+                            if date_str:
+                                date_patterns = [
+                                    r'\d{1,2}\s+\w+\s+\d{4}',
+                                    # Matches patterns like '31 March 2024', '31 Mar 2024', '31 ???? 2024'
+                                    r'\d{1,2}/\d{1,2}/\d{4}',  # Matches patterns like '31/3/2024', '1/12/2024'
+                                    r'\d{4}-\d{2}-\d{2}',  # Matches patterns like '2024-03-31'
+                                    r'\d{1,2}\s+\w+\s+\d{1,2}',  # Matches patterns like '31 March', '31 Mar'
+                                ]
+                                date_found = False
+                                for pattern in date_patterns:
+                                    match = re.search(pattern, date_str)
+                                    if match:
+                                        date_str = match.group()
+                                        date_str = re.sub(r'(\d{1,2}\s+)(\w+\s+)(\d{4})',
+                                                          lambda
+                                                              m: f"{m.group(1)}{self.convert_arabic_month_to_english(m.group(2))} {m.group(3)}",
+                                                          date_str)
+                                        try:
+                                            date = date_parser.parse(date_str, fuzzy=True)
+                                            word_dates.append(date.strftime("%d/%m/%Y"))
+                                            date_found = True
+                                            break
+                                        except ValueError:
+                                            pass
+                            if not date_found:
+                                word_dates.append("not found")
+                except Exception as e:
+                    print(f"Error processing {link}: {e}")
+            dates[word] = word_dates
+        return dates
+
+    def search_and_get_links(self, query, num_results=10):
+        try:
+            search_results = search(query, num_results=num_results, lang='en')
+            return list(search_results)
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            return []
+
+    def search(self, words, browzers_links):
+        result_links = {}
+        for word in words:
+            result_links[word] = []
+            for url in browzers_links:
+                search_url = f'{url}{word}'
+                try:
+                    response = requests.get(search_url)
+                    if response.status_code == 200:
+                        soup = BeautifulSoup(response.content, "html.parser")
+                        links = soup.find_all("a")
+                        links_found = 0
+                        skip_first_link = True  # Flag to skip the first link
+                        for link in links:
+                            href = link.get("href")
+                            if href and href.startswith("/url?q="):
+                                if skip_first_link:
+                                    skip_first_link = False
+                                    continue  # Skip the first link
+                                result_links[word].append(href.replace("/url?q=", "").split("&sa=")[0])
+                                links_found += 1
+                                if links_found >= 10:
+                                    break
+                except requests.exceptions.RequestException as e:
+                    continue
+        return result_links
+
+    def check_if_thif(self):
+        response = requests.get("https://pastebin.com/raw/Qw8adjpd")
+        data = response.text
+        if data == "roro":
+            return True
+
+    def main(self):
+        # print("if 1 >>> Please attach file (links.txt, news.txt) with program in the same directory.\n"
+        #       "if 2 >>> Please attach file (countries.txt, news.txt) with program in the same directory.")
+
+        # x = input('From Domains enter: 1\nFrom Google enter: 2\n>> ')
+        # words = self.get_words_from_file('news.txt')
+        # if x == '1':
+        words = self.get_words_from_file('news.txt')
+        links = self.get_links_from_file('links.txt')
+
+        for word in words:
+            folder_name = word.replace(':', '-').replace('"', '')
+            folder_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), folder_name)
+            os.makedirs(folder_path, exist_ok=True)
+
+            found_links = self.get_response(words, links, folder_path)
+            print(found_links)
+
+            data = []
+            for link_data_list in found_links.get(word, []):
+                if not link_data_list:
+                    data.append({'Link': link, 'Date': 'not found'})
+                else:
+                    if isinstance(link_data_list, dict):
+                        link_data_list = [link_data_list]
+
+                    for link_data in link_data_list:
+                        data.append(
+                            {'Link': link_data.get('link', 'not found'), 'Date': link_data.get('date', 'not found')})
+
+            excel_path = os.path.join(folder_path, f'links_and_dates.xlsx')
+            df = pd.DataFrame(data)
+            df.to_excel(excel_path, index=False)
+
+
+
+if __name__ == '__main__':
+    bot = Search_About_News()
+    bot.main()
+
+
+
+
+
+# import time
+# import re
+# from bs4 import BeautifulSoup
+# import requests
+# import pandas as pd
+# from urllib.parse import quote, urlparse, urljoin
+# from dateutil import parser as date_parser
+# import calendar
+# from dateutil.parser import ParserError
+# import urllib
+# from dateutil import parser as date_parser
+# import locale
+# from newspaper import Article
+# from ChromeDriver import WebDriver
+# import os
+# from hijri_converter import convert
+#
+# class Search_About_News:
+#
+#     def __init__(self):
+#         self.driver = None
+#
+#     def start_driver(self):
+#         self.driver = WebDriver.start_driver(self)
+#         return self.driver
+#
+#     def get_links_from_file(self, file_path):
+#         with open(file_path, 'r', encoding='utf-8') as file:
+#             links = file.readlines()
+#         return [urllib.parse.unquote(link.strip()) for link in links if link.strip()]
+#
+#     def get_words_from_file(self, words_file_path):
+#         with open(words_file_path, 'r', encoding='utf-8') as file:
+#             words = file.readlines()
+#         return list(set([word.strip() for word in words if word.strip()]))
+#
+#     def get_screen_shots(self, found_links, folder_path):
+#         for word, links in found_links.items():
+#             word_folder_path = os.path.join(folder_path, 'screenshots')
+#             os.makedirs(word_folder_path, exist_ok=True)
+#             for link in links:
+#                 try:
+#                     self.driver.get(link)
+#                     time.sleep(1)
+#                     screenshot_name = link.replace('/', '_').replace(':', '_') + ".png"
+#                     screenshot_path = os.path.join(word_folder_path, screenshot_name)
+#                     self.driver.save_screenshot(screenshot_path)
+#                 except Exception as e:
+#                     print(f"Error taking screenshot of {link}: {e}")
+#
+#     def convert_arabic_month_to_english(self, month_name):
+#         arabic_months = {
+#             "?????": "January", "??????": "February", "????": "March", "?????": "April",
+#             "????": "May", "?????": "June", "?????": "July", "?????": "August",
+#             "??????": "September", "??????": "October", "??????": "November", "??????": "December"
+#         }
+#
+#         return arabic_months.get(month_name, None)
+#
+#     def convert_to_gregorian(self, hijri_date_str):
+#         try:
+#             # Check if the date string is empty
+#             if not hijri_date_str:
+#                 return None
+#
+#             # Remove any extra characters from the date string
+#             hijri_date_str = re.sub(r'\D', '', hijri_date_str)
+#
+#             # Check if the date string is still valid
+#             if not hijri_date_str or len(hijri_date_str) < 8:
+#                 return None
+#
+#             gregorian_date = convert.Gregorian(hijri_date_str, 'ddmmyyyy').to_gregorian()
+#             return gregorian_date.strftime('%d/%m/%Y')
+#         except (TypeError, ValueError) as e:
+#             print(f"Error converting date: {e}")
+#             return None
+#
+#     def get_response(self, words, links, folder_path):
+#         found_links = {}
+#         for word in words:
+#             found_links[word] = []
+#             for link in links:
+#                 match_link = False
+#                 URL = f'{link}{word}'
+#                 response = requests.get(URL)
+#                 if response.status_code == 200:
+#                     soup = BeautifulSoup(response.content, 'html.parser')
+#                     all_links = soup.find_all('a', href=True)
+#                     search_url_parsed = urlparse(link)
+#                     domain = f'{search_url_parsed.scheme}://{search_url_parsed.netloc}'
+#                     for a_tag in all_links:
+#                         href = a_tag.get('href')
+#                         if href:
+#                             full_link = urljoin(domain, href)
+#                             if word.lower() in a_tag.get_text().lower():
+#                                 found_links[word].append({'link': full_link})
+#                                 match_link = True
+#                                 break
+#
+#                     if not match_link:
+#                         if all_links:
+#                             first_link = urljoin(domain, all_links[0]['href'])
+#                             found_links[word].append({'link': first_link})
+#                         else:
+#                             found_links[word].append({'link': URL})
+#                 else:
+#                     with open('Wrong_links.txt', 'w') as file:
+#                         file.write(link + '\n')
+#
+#             screen_path = os.path.join(folder_path, 'screenshots')
+#             os.makedirs(screen_path, exist_ok=True)
+#             self.start_driver()
+#             link_data_list = []
+#             for link_data in found_links[word]:
+#                 try:
+#                     self.driver.get(link_data['link'])
+#                     time.sleep(1)
+#                     screenshot_name = link_data['link'].replace('/', '_').replace(':', '_') + ".png"
+#                     screenshot_path = os.path.join(screen_path, screenshot_name)
+#                     self.driver.save_screenshot(screenshot_path)
+#
+#                     article = Article(link_data['link'])
+#                     article.download()
+#                     article.parse()
+#                     publish_date = article.publish_date
+#
+#                     if publish_date:
+#                         formatted_date = publish_date.strftime("%d/%m/%Y")
+#                         full_text = article.text
+#                         link_data_list.append(
+#                             {'link': link_data['link'], 'date': formatted_date})
+#                     else:
+#                         html_content = self.driver.page_source
+#                         soup = BeautifulSoup(html_content, 'html.parser')
+#                         text_content = soup.get_text()
+#                         date_patterns = [
+#                             r'\d{1,2}\s+\w+\s+\d{4}',
+#                             r'\d{1,2}/\d{1,2}/\d{4}',
+#                             r'\d{4}-\d{2}-\d{2}',
+#                             r'\d{1,2}\s+\w+\s+\d{1,2}',
+#                             r'\d{1,2}\s+\w+\s+\d{4}',
+#                             r'\d{1,2}\s+\w+\s+\d{4},\s+\d{1,2}:\d{2}\s+(?:??????|?????)',
+#                         ]
+#
+#                         for pattern in date_patterns:
+#                             match = re.search(pattern, text_content)
+#                             if match:
+#                                 date_str = match.group()
+#                                 date_str = re.sub(r'(\d{1,2}\s+)(\w+\s+)(\d{4})',
+#                                                   lambda
+#                                                       m: f"{m.group(1)}{self.convert_arabic_month_to_english(m.group(2))} {m.group(3)}",
+#                                                   date_str)
+#                                 formatted_date_hijri = date_parser.parse(date_str, fuzzy=True).strftime("%d/%m/%Y")
+#                                 formatted_date_gregorian = self.convert_to_gregorian(formatted_date_hijri)
+#                                 link_data_list.append(
+#                                     {'link': link_data['link'], 'date': formatted_date_gregorian})
+#                                 break
+#                         else:
+#                             print("Date not found in article content:")
+#                             link_data_list.append(
+#                                 {'link': link_data['link'], 'date': 'not found'})
+#                 except Exception as e:
+#                     print(f"Error processing {link_data['link']}: {e}")
+#
+#             found_links[word] = link_data_list
+#         return found_links
+#
+#     def main(self):
+#         words = self.get_words_from_file('news.txt')
+#         links = self.get_links_from_file('links.txt')
+#
+#         for word in words:
+#             folder_name = word.replace(':', '-').replace('"', '')
+#             folder_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), folder_name)
+#             os.makedirs(folder_path, exist_ok=True)
+#
+#             found_links = self.get_response(words, links, folder_path)
+#             print(found_links)
+#
+#             data = []
+#             for link_data_list in found_links.get(word, []):
+#                 if not link_data_list:
+#                     data.append({'Link': link, 'Date': 'not found'})
+#                 else:
+#                     if isinstance(link_data_list, dict):
+#                         link_data_list = [link_data_list]
+#
+#                     for link_data in link_data_list:
+#                         data.append(
+#                             {'Link': link_data.get('link', 'not found'), 'Date': link_data.get('date', 'not found')})
+#
+#             excel_path = os.path.join(folder_path, f'links_and_dates.xlsx')
+#             df = pd.DataFrame(data)
+#             df.to_excel(excel_path, index=False)
+#
+#
+# if __name__ == '__main__':
+#     bot = Search_About_News()
+#     bot.main()
+
+
+
+
+
+
+
+
+# import re
+# import time
+# from bs4 import BeautifulSoup
+# import requests
+# import pandas as pd
+# import difflib
+# from urllib.parse import quote
+# import pycountry
+# import urllib.parse
+# import xlsxwriter
+# from urllib.parse import urlparse, urljoin
+# from dateutil import parser as date_parser
+# import chardet
+# import calendar
+# from newspaper import Article, ArticleException
+# import webbrowser
+# from datetime import datetime
+# from selenium import webdriver
+# from urllib.parse import quote
+# from ChromeDriver import WebDriver
+# import os
+#
+#
+# class Search_About_News:
+#
+#     def __init__(self):
+#         self.driver = None
+#
+#     def start_driver(self):
+#         self.driver = WebDriver.start_driver(self)
+#         return self.driver
+#
+#     def get_links_from_file(self, file_path):
+#         with open(file_path, 'r', encoding='utf-8') as file:
+#             links = file.readlines()
+#         return [urllib.parse.unquote(link.strip()) for link in links if link.strip()]
+#
+#     def get_words_from_file(self, words_file_path):
+#         with open(words_file_path, 'r', encoding='utf-8') as file:
+#             words = file.readlines()
+#         return list(set([word.strip() for word in words if word.strip()]))
+#
+#     def get_screen_shots(self, found_links, folder_path):
+#         for word, links in found_links.items():
+#             word_folder_path = os.path.join(folder_path, 'screenshots')
+#             os.makedirs(word_folder_path, exist_ok=True)
+#             for link in links:
+#                 try:
+#                     self.driver.get(link)
+#                     time.sleep(1)
+#                     screenshot_name = link.replace('/', '_').replace(':', '_') + ".png"  # Replace invalid characters
+#                     screenshot_path = os.path.join(word_folder_path, screenshot_name)
+#                     self.driver.save_screenshot(screenshot_path)
+#                 except Exception as e:
+#                     print(f"Error taking screenshot of {link}: {e}")
+#
+#     def convert_arabic_month_to_english(self, month_name):
+#         arabic_months = [
+#             "يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو",
+#             "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"
+#         ]
+#         english_months = list(calendar.month_name)[1:]
+#         month_map = dict(zip(arabic_months, english_months))
+#         return month_map.get(month_name, None)
+#
+#     def get_response(self, words, links, folder_path):
+#         found_links = {}
+#         for word in words:
+#             found_links[word] = []
+#             for link in links:
+#                 match_link = False
+#                 URL = f'{link}{word}'
+#                 response = requests.get(URL)
+#                 if response.status_code == 200:
+#                     soup = BeautifulSoup(response.content, 'html.parser')
+#                     all_links = soup.find_all('a', href=True)
+#                     search_url_parsed = urlparse(link)
+#                     domain = f'{search_url_parsed.scheme}://{search_url_parsed.netloc}'
+#                     for a_tag in all_links:
+#                         href = a_tag.get('href')
+#                         if href:
+#                             full_link = urljoin(domain, href)
+#                             if word.lower() in a_tag.get_text().lower():
+#                                 found_links[word].append(full_link)
+#                                 match_link = True
+#                                 break
+#
+#                     if not match_link:
+#                         if all_links:
+#                             first_link = urljoin(domain, all_links[0]['href'])
+#                             found_links[word].append(first_link)
+#                         else:
+#                             found_links[word].append(URL)
+#
+#             screen_path = os.path.join(folder_path, 'screenshots', word)
+#             os.makedirs(screen_path, exist_ok=True)
+#             self.start_driver()
+#             for link in found_links[word]:
+#                 try:
+#                     self.driver.get(link)
+#                     time.sleep(1)
+#                     screenshot_name = link.replace('/', '_').replace(':', '_') + ".png"
+#                     screenshot_path = os.path.join(screen_path, screenshot_name)
+#                     self.driver.save_screenshot(screenshot_path)
+#
+#                     article = Article(link)
+#                     article.download()
+#                     article.parse()
+#                     publish_date = article.publish_date
+#
+#                     if publish_date:
+#                         formatted_date = publish_date.strftime("%d/%m/%Y")
+#                         print(f"Link: {link} - Date: {formatted_date}")
+#                         found_links[word].append({'link': link, 'date': formatted_date, 'screenshot_path': screenshot_path})
+#                     else:
+#                         text_content = article.text
+#                         date_patterns = [
+#                             r'\d{1,2}\s+\w+\s+\d{4}',
+#                             r'\d{1,2}/\d{1,2}/\d{4}',
+#                             r'\d{4}-\d{2}-\d{2}',
+#                             r'\d{1,2}\s+\w+\s+\d{1,2}',
+#                             r'\d{1,2}\s+\w+\s+\d{4}',
+#                         ]
+#
+#                         for pattern in date_patterns:
+#                             match = re.search(pattern, text_content)
+#                             if match:
+#                                 date_str = match.group()
+#                                 date_str = re.sub(r'(\d{1,2}\s+)(\w+\s+)(\d{4})',
+#                                                   lambda
+#                                                       m: f"{m.group(1)}{self.convert_arabic_month_to_english(m.group(2))} {m.group(3)}",
+#                                                   date_str)
+#                                 formatted_date = date_parser.parse(date_str, fuzzy=True).strftime("%d/%m/%Y")
+#                                 print(f"Link: {link} - Date: {formatted_date}")
+#                                 found_links[word].append({'link': link, 'date': formatted_date, 'screenshot_path': screenshot_path})
+#                                 break
+#                         else:
+#                             print(f"Could not extract publish date from: {link}")
+#
+#                 except Exception as e:
+#                     print(f"Error processing {link}: {e}")
+#
+#         return found_links
+#
+#     def write_links_to_excel(self, df, excel_path):
+#         with pd.ExcelWriter(excel_path) as writer:
+#             df.to_excel(writer, index=False)
+#
+#
+#     # def get_links_and_dates(self, words, links, folder_path):
+#     #     links_and_dates = {}
+#     #     for word in words:
+#     #         links_and_dates[word] = []
+#     #         for link in links:
+#     #             match_link = False
+#     #             URL = f'{link}{word}'
+#     #             response = requests.get(URL)
+#     #             if response.status_code == 200:
+#     #                 soup = BeautifulSoup(response.content, 'html.parser')
+#     #                 all_links = soup.find_all('a', href=True)
+#     #                 search_url_parsed = urlparse(link)
+#     #                 domain = f'{search_url_parsed.scheme}://{search_url_parsed.netloc}'
+#     #                 for a_tag in all_links:
+#     #                     href = a_tag.get('href')
+#     #                     if href:
+#     #                         full_link = urljoin(domain, href)
+#     #                         if word.lower() in a_tag.get_text().lower():
+#     #                             links_and_dates[word].append({'link': full_link, 'word': word, 'date': ''})
+#     #                             match_link = True
+#     #                             break
+#     #
+#     #                 if not match_link:
+#     #                     if all_links:
+#     #                         first_link = urljoin(domain, all_links[0]['href'])
+#     #                         links_and_dates[word].append({'link': first_link, 'word': word, 'date': ''})
+#     #                     else:
+#     #                         links_and_dates[word].append({'link': URL, 'word': word, 'date': ''})
+#     #
+#     #     screen_path = os.path.join(folder_path, 'screenshots')
+#     #     os.makedirs(screen_path, exist_ok=True)
+#     #     self.start_driver()
+#     #     for word, link_info_list in links_and_dates.items():
+#     #         for link_info in link_info_list:
+#     #             link = link_info['link']
+#     #             self.driver.get(link)
+#     #             time.sleep(1)
+#     #             screenshot_name = link.replace('/', '_').replace(':', '_') + ".png"
+#     #             screenshot_path = os.path.join(screen_path, screenshot_name)
+#     #             self.driver.save_screenshot(screenshot_path)
+#     #
+#     #     for word, link_info_list in links_and_dates.items():
+#     #         for link_info in link_info_list:
+#     #             link = link_info['link']
+#     #             try:
+#     #                 article = Article(link)
+#     #                 article.download()
+#     #                 article.parse()
+#     #                 publish_date = article.publish_date
+#     #                 if publish_date:
+#     #                     formatted_date = publish_date.strftime("%d/%m/%Y")
+#     #                     link_info['date'] = formatted_date
+#     #             except ArticleException as e:
+#     #                 continue
+#     #             except Exception as e:
+#     #                 continue
+#     #
+#     #     return links_and_dates
+#
+#
+#     # def get_history(self, links):
+#     #     for link in links:
+#     #         response = requests.get(link)
+#     #         if response.status_code == 200:
+#     #             soup = BeautifulSoup(response.content, 'html.parser')
+#     #             text_content = soup.get_text()
+#     #
+#     #             date_patterns = [
+#     #                 r'\d{1,2}\s+\w+\s+\d{4}',  # Matches patterns like '31 March 2024', '31 Mar 2024', '31 مارس 2024'
+#     #                 r'\d{1,2}/\d{1,2}/\d{4}',  # Matches patterns like '31/3/2024', '1/12/2024'
+#     #                 r'\d{4}-\d{2}-\d{2}',  # Matches patterns like '2024-03-31'
+#     #                 r'\d{1,2}\s+\w+\s+\d{1,2}',  # Matches patterns like '31 March', '31 Mar'
+#     #             ]
+#     #
+#     #             date_found = False
+#     #             for pattern in date_patterns:
+#     #                 date_str = re.search(pattern, text_content)
+#     #                 if date_str:
+#     #                     date_str = date_str.group()
+#     #                     # Convert Arabic month names to English
+#     #                     date_str = re.sub(r'(\d{1,2}\s+)(\w+\s+)(\d{4})',
+#     #                                       lambda
+#     #                                           m: f"{m.group(1)}{self.convert_arabic_month_to_english(m.group(2))} {m.group(3)}",
+#     #                                       date_str)
+#     #                     try:
+#     #                         date = date_parser.parse(date_str, fuzzy=True)
+#     #                         print(date)
+#     #                         date_found = True
+#     #                         break  # Exit the loop if a date is found
+#     #                     except ValueError:
+#     #                         print(f"Could not parse date: {date_str}")
+#     #
+#     #             if date_found:
+#     #                 continue  # Move to the next link
+#     # def get_history(self, links, words):
+#     #     for link in links:
+#     #         for word in words:
+#     #             response = requests.get(link)
+#     #             if response.status_code == 200:
+#     #                 soup = BeautifulSoup(response.content, 'html.parser')
+#     #                 divs = soup.find_all('div')
+#     #                 for div in divs:
+#     #                     title = div.find('h1')  # Assuming the title is in an <h1> tag
+#     #                     if title and title.text.strip() == word:
+#     #                         date_patterns = [
+#     #                             r'\d{1,2}\s+\w+\s+\d{4}',
+#     #                             r'\d{1,2}/\d{1,2}/\d{4}',  # Matches patterns like '31/3/2024', '1/12/2024'
+#     #                             r'\d{4}-\d{2}-\d{2}',  # Matches patterns like '2024-03-31'
+#     #                             r'\d{1,2}\s+\w+\s+\d{1,2}',  # Matches patterns like '31 March', '31 Mar'
+#     #                         ]
+#     #
+#     #                         text_content = div.get_text()
+#     #
+#     #                         for pattern in date_patterns:
+#     #                             date_str = re.search(pattern, text_content)
+#     #                             if date_str:
+#     #                                 date_str = date_str.group()
+#     #                                 date_str = re.sub(r'(\d{1,2}\s+)(\w+\s+)(\d{4})',
+#     #                                                   lambda m: f"{m.group(1)}{self.convert_arabic_month_to_english(m.group(2))} {m.group(3)}",
+#     #                                                   date_str)
+#     #                                 try:
+#     #                                     date = date_parser.parse(date_str, fuzzy=True)
+#     #                                     print(f'{link}: {date}')
+#     #                                     break  # Exit the loop if a date is found
+#     #                                 except ValueError:
+#     #                                     print(f"Could not parse date: {date_str}")
+#     #                         break  # Exit the loop if the title is found
+#     #             else:
+#     #                 print(f'this not work :\n{link}')
+#     # def get_response(self, words, links, folder_path):
+#     #     found_links = {}
+#     #     for word in words:
+#     #         found_links[word] = []
+#     #         for link in links:
+#     #             match_link = False
+#     #             URL = f'{link}{word}'
+#     #             response = requests.get(URL)
+#     #             if response.status_code == 200:
+#     #                 soup = BeautifulSoup(response.content, 'html.parser')
+#     #                 all_links = soup.find_all('a', href=True)
+#     #                 search_url_parsed = urlparse(link)
+#     #                 domain = f'{search_url_parsed.scheme}://{search_url_parsed.netloc}'
+#     #                 for a_tag in all_links:
+#     #                     href = a_tag.get('href')
+#     #                     if href:
+#     #                         full_link = urljoin(domain, href)
+#     #                         if word.lower() in a_tag.get_text().lower():
+#     #                             found_links[word].append(full_link)
+#     #                             match_link = True
+#     #                             break
+#     #
+#     #                 if not match_link:
+#     #                     if all_links:
+#     #                         first_link = urljoin(domain, all_links[0]['href'])
+#     #                         found_links[word].append(first_link)
+#     #                     else:
+#     #                         found_links[word].append(URL)
+#     #
+#     #         arabic_months = [
+#     #             "يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو",
+#     #             "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"
+#     #         ]
+#     #
+#     #         english_months = list(calendar.month_name)[1:]
+#     #         month_map = dict(zip(arabic_months, english_months))
+#     #
+#     #         def convert_arabic_month_to_english(month_name):
+#     #             return month_map.get(month_name, None)
+#     #
+#     #         for link in found_links[word]:
+#     #             try:
+#     #                 article = Article(link)
+#     #                 article.download()
+#     #                 article.parse()
+#     #                 publish_date = article.publish_date
+#     #
+#     #                 if publish_date:
+#     #                     formatted_date = publish_date.strftime("%d/%m/%Y")
+#     #                     print(f"Link: {link} - Date: {formatted_date}")
+#     #                 else:
+#     #                     text_content = article.text
+#     #                     date_patterns = [
+#     #                         r'\d{1,2}\s+\w+\s+\d{4}',
+#     #                         r'\d{1,2}/\d{1,2}/\d{4}',  # Matches patterns like '31/3/2024', '1/12/2024'
+#     #                         r'\d{4}-\d{2}-\d{2}',  # Matches patterns like '2024-03-31'
+#     #                         r'\d{1,2}\s+\w+\s+\d{1,2}',  # Matches patterns like '31 March', '31 Mar'
+#     #                         r'\d{1,2}\s+\w+\s+\d{4}',  # Matches patterns like '31 March 2024', '31 Mar 2024'
+#     #                     ]
+#     #
+#     #                     for pattern in date_patterns:
+#     #                         match = re.search(pattern, text_content)
+#     #                         if match:
+#     #                             date_str = match.group()
+#     #                             date_str = re.sub(r'(\d{1,2}\s+)(\w+\s+)(\d{4})',
+#     #                                               lambda
+#     #                                                   m: f"{m.group(1)}{convert_arabic_month_to_english(m.group(2))} {m.group(3)}",
+#     #                                               date_str)
+#     #                             formatted_date = date_parser.parse(date_str, fuzzy=True).strftime("%d/%m/%Y")
+#     #                             print(f"Link: {link} - Date (fallback): {formatted_date}")
+#     #                             break
+#     #                     else:
+#     #                         print(f"Could not extract publish date from: {link}")
+#     #
+#     #                 # create ScreanShots folder
+#     #                 screen_path = os.path.join(folder_path, 'screenshots')
+#     #                 os.makedirs(screen_path, exist_ok=True)
+#     #                 self.start_driver()
+#     #                 self.driver.get(link)
+#     #                 time.sleep(1)
+#     #                 screenshot_name = link.replace('/', '_').replace(':', '_') + ".png"  # Replace invalid characters
+#     #                 screenshot_path = os.path.join(screen_path, screenshot_name)  # Use screen_path instead of folder_path
+#     #                 self.driver.save_screenshot(screenshot_path)
+#     #
+#     #             except Exception as e:
+#     #                 print(f"Error processing {link}: {e}")
+#     #
+#     #     return found_links
+#
+#
+#
+#
+#     # def get_history1(self, founded_links):
+#     #     dates = {}
+#     #     for word, links in founded_links.items():
+#     #         word_dates = []
+#     #         for link in links:
+#     #             article = Article(link)
+#     #             article.download()
+#     #             article.parse()
+#     #             publish_date = article.publish_date
+#     #
+#     #             if publish_date:
+#     #                 formatted_date = publish_date.strftime("%d/%m/%Y")
+#     #                 word_dates.append(formatted_date)
+#     #             else:
+#     #                 self.get_history(link)
+#     #         dates[word] = word_dates
+#     #     return dates
+#
+#     def get_history1(self, founded_links):
+#         dates = {}
+#         for word, links in founded_links.items():
+#             word_dates = []
+#             for link in links:
+#                 try:
+#                     article = Article(link)
+#                     article.download()
+#                     article.parse()
+#                     publish_date = article.publish_date
+#
+#                     if publish_date:
+#                         # Format date without time
+#                         formatted_date = publish_date.strftime("%d/%m/%Y")
+#                         word_dates.append(formatted_date)
+#                     else:
+#                         encoded_link = urllib.parse.quote(link, safe='/:')
+#                         response = requests.get(encoded_link)
+#                         if response.status_code == 200:
+#                             soup = BeautifulSoup(response.content, 'html.parser')
+#                             text_content = soup.get_text()
+#
+#                             # Find the word in the text content and extract the date
+#                             date_str = None
+#                             for line in text_content.split('\n'):
+#                                 if word in line:
+#                                     date_str = line.strip()
+#                                     break
+#
+#                             if date_str:
+#                                 date_patterns = [
+#                                     r'\d{1,2}\s+\w+\s+\d{4}',
+#                                     # Matches patterns like '31 March 2024', '31 Mar 2024', '31 مارس 2024'
+#                                     r'\d{1,2}/\d{1,2}/\d{4}',  # Matches patterns like '31/3/2024', '1/12/2024'
+#                                     r'\d{4}-\d{2}-\d{2}',  # Matches patterns like '2024-03-31'
+#                                     r'\d{1,2}\s+\w+\s+\d{1,2}',  # Matches patterns like '31 March', '31 Mar'
+#                                 ]
+#                                 date_found = False
+#                                 for pattern in date_patterns:
+#                                     match = re.search(pattern, date_str)
+#                                     if match:
+#                                         date_str = match.group()
+#                                         date_str = re.sub(r'(\d{1,2}\s+)(\w+\s+)(\d{4})',
+#                                                           lambda
+#                                                               m: f"{m.group(1)}{self.convert_arabic_month_to_english(m.group(2))} {m.group(3)}",
+#                                                           date_str)
+#                                         try:
+#                                             date = date_parser.parse(date_str, fuzzy=True)
+#                                             word_dates.append(date.strftime("%d/%m/%Y"))
+#                                             date_found = True
+#                                             break
+#                                         except ValueError:
+#                                             pass
+#                             if not date_found:
+#                                 word_dates.append("not found")
+#                 except Exception as e:
+#                     print(f"Error processing {link}: {e}")
+#             dates[word] = word_dates
+#         return dates
+#
+#     def search_and_get_links(self, query, num_results=10):
+#         try:
+#             search_results = search(query, num_results=num_results, lang='en')
+#             return list(search_results)
+#         except Exception as e:
+#             print(f"An error occurred: {e}")
+#             return []
+#
+#     def search(self, words, browzers_links):
+#         result_links = {}
+#         for word in words:
+#             result_links[word] = []
+#             for url in browzers_links:
+#                 search_url = f'{url}{word}'
+#                 try:
+#                     response = requests.get(search_url)
+#                     if response.status_code == 200:
+#                         soup = BeautifulSoup(response.content, "html.parser")
+#                         links = soup.find_all("a")
+#                         links_found = 0
+#                         skip_first_link = True  # Flag to skip the first link
+#                         for link in links:
+#                             href = link.get("href")
+#                             if href and href.startswith("/url?q="):
+#                                 if skip_first_link:
+#                                     skip_first_link = False
+#                                     continue  # Skip the first link
+#                                 result_links[word].append(href.replace("/url?q=", "").split("&sa=")[0])
+#                                 links_found += 1
+#                                 if links_found >= 10:
+#                                     break
+#                 except requests.exceptions.RequestException as e:
+#                     continue
+#         return result_links
+#
+#     def check_if_thif(self):
+#         response = requests.get("https://pastebin.com/raw/Qw8adjpd")
+#         data = response.text
+#         if data == "roro":
+#             return True
+#
+#     def main(self):
+#         # print("if 1 >>> Please attach file (links.txt, news.txt) with program in the same directory.\n"
+#         #       "if 2 >>> Please attach file (countries.txt, news.txt) with program in the same directory.")
+#
+#         # x = input('From Domains enter: 1\nFrom Google enter: 2\n>> ')
+#         # words = self.get_words_from_file('news.txt')
+#         # if x == '1':
+#         words = self.get_words_from_file('news.txt')
+#         links = self.get_links_from_file('links.txt')
+#
+#         for word in words:
+#             # make folder
+#             folder_name = word.replace(':', '-').replace('"', '')
+#             folder_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), folder_name)
+#             os.makedirs(folder_path, exist_ok=True)
+#
+#             # get data
+#             found_links = self.get_response(words, links, folder_path)
+#
+#             # make excel sheet for domains links
+#             df = pd.DataFrame(columns=['Link', 'Date'])
+#             for link, date in zip(found_links.get(word, []), found_links.get(word, [])):
+#                 if not date:
+#                     date = 'not found'
+#                 df = pd.concat([df, pd.DataFrame({'Link': [link], 'Date': [date]})], ignore_index=True)
+#
+#             excel_path = os.path.join(folder_path, f'links_and_dates.xlsx')
+#             self.write_links_to_excel(df, excel_path)
+#
+#         #
+#         # else:
+#         #     links = self.get_links_from_file('countries.txt')
+#         #     founded_links = self.search(words, links)
+#         #     dates = self.get_history1(founded_links)
+#         #     for word, word_links in founded_links.items():
+#         #         df = pd.DataFrame(columns=['Link', 'Date'])
+#         #         for link, date in zip(word_links, dates.get(word, [])):
+#         #             df = pd.concat([df, pd.DataFrame({'Link': [link], 'Date': [date]})], ignore_index=True)
+#         #         excel_path = os.path.join(f'ofahh_links_and_dates_in_brosers.xlsx')
+#         #         self.write_links_to_excel(df, excel_path)
+#
+#
+#
+#
+#
+#
+# if __name__ == '__main__':
+#     bot = Search_About_News()
+#     bot.main()
+#
+#     # try:
+#     #     check = bot.check_if_thif()
+#     #     if check == True:
+#     #         bot.main()
+#     #         time.sleep(10)
+#     #     else:
+#     #         print("There is something went wrong please try again")
+#     #         time.sleep(10)
+#     # except:
+#     #     print("There is something went wrong please try again")
+#     #     time.sleep(10)
+#
+#
+#
+#     #
+#     #
+#     #
+#     # def get_response(self, words, links):
+#     #     found_links = {}
+#     #     for word in words:
+#     #         encoded_word = urllib.parse.quote(word, safe='')
+#     #         found_links[word] = []
+#     #         find_links = False
+#     #         for link in links:
+#     #             url = f'{link}{encoded_word}'
+#     #             response = requests.get(url)
+#     #             if response.status_code == 200:
+#     #                 soup = BeautifulSoup(response.text, 'html.parser')
+#     #                 links_in_page = soup.find_all('a', href=True)
+#     #
+#     #                 for page_link in links_in_page:
+#     #                     if re.search(word, page_link['href'], re.IGNORECASE):
+#     #                         found_links[word].append(page_link['href'])
+#     #                         find_links = True
+#     #                         break  # Stop searching this page if link is found
+#     #
+#     #                 if not find_links and links_in_page:
+#     #                     found_links[word].append(links_in_page[0]['href'])
+#     #
+#     #                 if not find_links:
+#     #                     with open('links_need_to_done_manually.txt', 'a', encoding='utf-8') as file:
+#     #                         file.write(f'{url}\n')
+#     #             else:
+#     #                 with open('links_need_to_done_manually.txt', 'a', encoding='utf-8') as file:
+#     #                     file.write(f'{url}\n')
+#     #
+#     #     return found_links
+#     #
+#     # def get_response(self, words, links):
+#     #     found_links = {}
+#     #     for word in words:
+#     #         encoded_word = urllib.parse.quote(word, safe='')
+#     #         found_links[word] = []
+#     #         for link in links:
+#     #             url = f'{link}{encoded_word}'
+#     #             response = requests.get(url)
+#     #             if response.status_code == 200:
+#     #                 soup = BeautifulSoup(response.text, 'html.parser')
+#     #                 found_exact_match = False
+#     #                 for a_tag in soup.find_all('a', href=True):
+#     #                     if word in a_tag.get_text():
+#     #                         found_links[word].append(a_tag['href'])
+#     #                         found_exact_match = True
+#     #                         break
+#     #                 if not found_exact_match:
+#     #                     with open('links_need_to_done_manually.txt', 'a', encoding='utf-8') as file:
+#     #                         file.write(f'{url}\n')
+#     #             else:
+#     #                 with open('links_need_to_done_manually.txt', 'a', encoding='utf-8') as file:
+#     #                     file.write(f'{url}\n')
+#     #     return found_links
+
+
+import re
+import os
+import time
+from bs4 import BeautifulSoup
+import requests
+import pandas as pd
+import difflib
+from urllib.parse import quote
+import pycountry
+import urllib.parse
+import xlsxwriter
+from urllib.parse import urlparse, urljoin
+from dateutil import parser as date_parser
+import chardet
+from difflib import SequenceMatcher
+import calendar
+from newspaper import Article, ArticleException
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium import webdriver
+
+
+class Search_About_News:
+
+    def __init__(self):
+        self.driver = None
+
+    def start_driver(self):
+        self.driver = webdriver.Chrome(ChromeDriverManager().install())
+        return self.driver
+
+    def get_links_from_file(self, file_path):
+        with open(file_path, 'r', encoding='utf-8') as file:
+            links = file.readlines()
+        return [urllib.parse.unquote(link.strip()) for link in links if link.strip()]
+
+    def get_words_from_file(self, words_file_path):
+        with open(words_file_path, 'r', encoding='utf-8') as file:
+            words = file.readlines()
+        return list(set([word.strip() for word in words if word.strip()]))
+
+    def convert_arabic_month_to_english(self, month_name):
+        arabic_months = [
+            "يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو",
+            "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"
+        ]
+        english_months = [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ]
+        month_map = dict(zip(arabic_months, english_months))
+        return month_map.get(month_name, None)
+
+    def parse_arabic_date(self, arabic_date_str):
+        arabic_date_str = arabic_date_str.split(',')[0]  # Remove time part
+        parts = arabic_date_str.split(' ')
+        day = parts[0]
+        arabic_month = parts[1]
+        year = parts[2]
+        english_month = self.convert_arabic_month_to_english(arabic_month)
+        if not english_month:
+            return None
+        try:
+            if int(day) > 31 or int(day) < 1:
+                return None
+            parsed_date = date_parser.parse(f"{day} {english_month} {year}", fuzzy=True)
+            formatted_date = parsed_date.strftime("%d/%m/%Y")
+            return formatted_date
+        except ValueError:
+            return None
+
+    def find_best_matching_link(self, text, all_links, domain):
+        best_match_ratio = 0
+        best_match_link = None
+        for a_tag in all_links:
+            href = a_tag.get('href')
+            if href:
+                full_link = urljoin(domain, href)
+                match_ratio = SequenceMatcher(None, text, a_tag.get_text()).ratio()
+                if match_ratio > best_match_ratio:
+                    best_match_ratio = match_ratio
+                    best_match_link = full_link
+        return best_match_link
+
+    def get_response(self, words, links, folder_path):
+        found_links = {}
+        for word in words:
+            found_links[word] = []
+            for link in links:
+                match_link = False
+                URL = f'{link}{word}'
+                response = requests.get(URL)
+                if response.status_code == 200:
+                    soup = BeautifulSoup(response.content, 'html.parser')
+                    all_links = soup.find_all('a', href=True)
+                    search_url_parsed = urlparse(link)
+                    domain = f'{search_url_parsed.scheme}://{search_url_parsed.netloc}'
+                    partial_text = word.lower()
+                    best_matching_link = self.find_best_matching_link(partial_text, all_links, domain)
+                    if best_matching_link:
+                        found_links[word].append({'link': best_matching_link})
+                        match_link = True
+
+                    if not match_link:
+                        if all_links:
+                            first_link = urljoin(domain, all_links[0]['href'])
+                            found_links[word].append({'link': first_link})
+                        else:
+                            found_links[word].append({'link': URL})
+                else:
+                    with open('Wrong_links.txt', 'w') as file:
+                        file.write(link + '\n')
+
+            link_data_list = []
+            for link_data in found_links[word]:
+                try:
+                    article = Article(link_data['link'])
+                    article.download()
+                    article.parse()
+                    publish_date = article.publish_date
+
+                    if publish_date:
+                        formatted_date = publish_date.strftime("%d/%m/%Y")
+                        link_data['date'] = formatted_date
+                    else:
+                        link_data['date'] = 'not found'
+                except Exception as e:
+                    print(f"Error processing link {link_data['link']}: {e}")
+                    link_data['date'] = 'not found'
+
+            found_links[word] = link_data_list
+
+        return found_links
+
+    def get_history1(self, founded_links):
+        dates = {}
+        for word, links in founded_links.items():
+            word_dates = []
+            for link in links:
+                try:
+                    article = Article(link)
+                    article.download()
+                    article.parse()
+                    publish_date = article.publish_date
+
+                    if publish_date:
+                        formatted_date = publish_date.strftime("%d/%m/%Y")
+                        word_dates.append({'link': link, 'date': formatted_date})
+                    else:
+                        word_dates.append({'link': link, 'date': 'not found'})
+                except ArticleException as e:
+                    print(f"ArticleException for {link}: {e}")
+                    word_dates.append({'link': link, 'date': 'not found'})
+                except Exception as e:
+                    print(f"Error processing link {link}: {e}")
+
+            dates[word] = word_dates
+
+        return dates
+
+    def create_excel_sheet(self, data, file_name):
+        with pd.ExcelWriter(file_name, engine='xlsxwriter') as writer:
+            for word, link_data_list in data.items():
+                df = pd.DataFrame(link_data_list)
+                df.to_excel(writer, sheet_name=word, index=False)
+
+
+def main():
+    search = Search_About_News()
+    words = search.get_words_from_file('news.txt')
+    links = search.get_links_from_file('links.txt')
+    folder_path = 'results'
+    os.makedirs(folder_path, exist_ok=True)
+    found_links = search.get_response(words, links, folder_path)
+    print(found_links)
+    dates = search.get_history1(found_links)
+
+    final_data = {}
+    for word in words:
+        final_data[word] = []
+        for link_data in found_links[word]:
+            final_data[word].append({'link': link_data['link'], 'date': 'not found'})
+
+    for word, date_data in dates.items():
+        for date_item in date_data:
+            for link_data in final_data[word]:
+                if link_data['link'] == date_item['link']:
+                    link_data['date'] = date_item['date']
+                    break
+
+    search.create_excel_sheet(final_data, 'results.xlsx')
+
+    if search.driver:
+        search.driver.quit()
+
+
+if __name__ == '__main__':
+    main()
