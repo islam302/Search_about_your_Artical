@@ -111,7 +111,6 @@ class Search_About_News:
                 except Exception as e:
                     print(f"Error taking screenshot of {link}: {e}")
 
-
     def get_searching_links(self, words, links, folder_path):
         found_links = {}
         for word in words:
@@ -127,15 +126,14 @@ class Search_About_News:
                     for link in links:
                         href = link.get("href")
                         if href.startswith("/url?q="):
-                            result_links[word].append(href.replace("/url?q=", "").split("&sa=")[0])
-                            links_found += 1
-                            if links_found >= 10:
-                                break
-                        full_link = urljoin(base_url, extracted_link)
-                        if word.lower() in extracted_link.lower():
-                            date = self.get_publish_date(full_link, word)
-                            found_links[word].append({'link': extracted_link, 'date': date})
-                            link_counter += 1
+                            extracted_link = href.replace("/url?q=", "").split("&sa=")[0]
+                            full_link = urljoin(search_url, extracted_link)
+                            if word.lower() in extracted_link.lower():
+                                date = self.get_publish_date(full_link, word)
+                                found_links[word].append({'link': extracted_link, 'date': date})
+                                links_found += 1
+                                if links_found >= 10:
+                                    break
         return found_links
 
     # def get_searching_links(self, words, links, folder_path):
